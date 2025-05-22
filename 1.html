@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biểu mẫu Hàng Bán Trả Lại</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Light gray background */
+        }
+        .container {
+            max-width: 900px; /* Increased max-width for better layout */
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #1a202c; /* Darker heading color */
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #4a5568; /* Medium gray label color */
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        textarea,
+        select { /* Added select here */
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0; /* Lighter border */
+            border-radius: 0.375rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+            background-color: white; /* Ensure select has white background */
+        }
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        textarea:focus,
+        select:focus { /* Added select here */
+            outline: none;
+            border-color: #4299e1; /* Blue border on focus */
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+        }
+        .grid-cols-custom {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+        .table-container {
+            overflow-x: auto; /* Allow horizontal scrolling for table on small screens */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 0.75rem;
+            text-align: left;
+            font-size: 0.875rem;
+        }
+        th {
+            background-color: #f7fafc; /* Light gray table header */
+            font-weight: 600;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-align: center;
+        }
+        .btn-primary {
+            background-color: #4299e1; /* Blue button */
+            color: white;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #3182ce;
+        }
+        .btn-secondary {
+            background-color: #48bb78; /* Green button */
+            color: white;
+            border: none;
+        }
+        .btn-secondary:hover {
+            background-color: #38a169;
+        }
+        .btn-danger {
+            background-color: #f56565; /* Red button */
+            color: white;
+            border: none;
+        }
+        .btn-danger:hover {
+            background-color: #e53e3e;
+        }
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        .signature-block {
+            text-align: center;
+            width: 45%;
+        }
+        .signature-block p {
+            margin-bottom: 3rem; /* Space for signature */
+        }
+        /* Custom styles for placeholder-like inputs */
+        .inline-inputs span {
+            margin: 0 0.25rem;
+        }
+        .inline-inputs input[type="text"], .inline-inputs input[type="number"] {
+            width: auto;
+            min-width: 60px;
+            display: inline-block;
+            text-align: center;
+            padding: 0.25rem 0.5rem;
+        }
+        /* Styling for the select element to match other inputs */
+        select#counterNumber {
+             /* Ensures it takes up available width like other inputs in its container if needed */
+            /* padding is already covered by the general select style */
+            /* border and border-radius are also covered */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="text-center mb-8">
+            <div class="inline-inputs mb-2 text-right">
+                <input type="text" id="formLocation" placeholder="Địa điểm" class="w-auto px-2 py-1 border rounded">,
+                <span>ngày</span> <input type="number" id="formDay" placeholder="dd" min="1" max="31" class="w-16 px-2 py-1 border rounded">
+                <span>tháng</span> <input type="number" id="formMonth" placeholder="mm" min="1" max="12" class="w-16 px-2 py-1 border rounded">
+                <span>năm</span> <input type="number" id="formYear" placeholder="yyyy" min="2000" class="w-20 px-2 py-1 border rounded">
+            </div>
+            <h1 class="text-2xl font-bold mb-4">BIÊN BẢN HÀNG BÁN TRẢ LẠI KIÊM THU HỒI HÓA ĐƠN</h1>
+            <div class="inline-inputs mb-4">
+                <span>Hôm nay ngày</span> <input type="number" id="recordDay" placeholder="dd" min="1" max="31" class="w-16 px-2 py-1 border rounded">
+                <span>tháng</span> <input type="number" id="recordMonth" placeholder="mm" min="1" max="12" class="w-16 px-2 py-1 border rounded">
+                <span>năm</span> <input type="number" id="recordYear" placeholder="yyyy" min="2000" class="w-20 px-2 py-1 border rounded">
+                <span>chúng tôi gồm có:</span>
+            </div>
+        </header>
+
+        <section class="mb-6 p-4 border rounded-md shadow-sm">
+            <h2 class="text-xl font-semibold mb-3">I/ ĐẠI DIỆN CỬA HÀNG</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="storeManager">1. Cửa hàng trưởng:</label>
+                    <input type="text" id="storeManager" placeholder="Họ tên cửa hàng trưởng">
+                </div>
+                <div>
+                    <label for="storeAccountant">2. Kế toán cửa hàng:</label>
+                    <input type="text" id="storeAccountant" placeholder="Họ tên kế toán">
+                </div>
+                <div class="md:col-span-2">
+                    <label for="salesStaff">3. Nhân viên bán hàng tại quầy:</label>
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="salesStaff" placeholder="Họ tên nhân viên" class="flex-grow">
+                        <span>Quầy số:</span>
+                        <select id="counterNumber" class="w-24">
+                            <option value="9903">9903</option>
+                            <option value="9904">9904</option>
+                            <option value="9905">9905</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-6 p-4 border rounded-md shadow-sm">
+            <h2 class="text-xl font-semibold mb-3">II/ KHÁCH HÀNG</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="customerName">Họ tên:</label>
+                    <input type="text" id="customerName" placeholder="Họ tên khách hàng">
+                </div>
+                <div>
+                    <label for="customerAddress">Địa chỉ liên lạc:</label>
+                    <input type="text" id="customerAddress" placeholder="Địa chỉ khách hàng">
+                </div>
+                <div>
+                    <label for="customerIdNumber">CMND Số:</label>
+                    <input type="text" id="customerIdNumber" placeholder="Số CMND/CCCD">
+                </div>
+                <div>
+                    <label for="customerIdDate">Cấp ngày:</label>
+                    <input type="date" id="customerIdDate">
+                </div>
+                <div class="md:col-span-2">
+                    <label for="customerIdPlace">Tại:</label>
+                    <input type="text" id="customerIdPlace" placeholder="Nơi cấp CMND/CCCD">
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-6 p-4 border rounded-md shadow-sm">
+            <h2 class="text-xl font-semibold mb-3">CHI TIẾT SẢN PHẨM TRẢ LẠI</h2>
+            <div class="table-container">
+                <table id="productTable">
+                    <thead>
+                        <tr>
+                            <th>Mã sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Trọng lượng các loại (kg)</th>
+                            <th>Trọng lượng Q10 (kg)</th>
+                            <th>Đơn giá (VNĐ)</th>
+                            <th>Thành tiền (VNĐ)</th>
+                            <th>Ghi chú</th>
+                            <th>Xóa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+            <button type="button" id="addRowBtn" class="btn btn-secondary mt-4">Thêm sản phẩm</button>
+        </section>
+
+        <section class="mb-6 p-4 border rounded-md shadow-sm">
+            <h2 class="text-xl font-semibold mb-3">LÝ DO TRẢ HÀNG</h2>
+            <div>
+                <label for="returnReason">Vì lý do:</label>
+                <textarea id="returnReason" rows="3" placeholder="Nêu rõ lý do trả hàng"></textarea>
+            </div>
+        </section>
+
+        <section class="mb-6 p-4 border rounded-md shadow-sm">
+            <h2 class="text-xl font-semibold mb-3">THÔNG TIN HÓA ĐƠN</h2>
+            <p class="mb-2">Nhận thấy đó là lý do chính đáng nên cửa hàng chấp nhận thu hồi hóa đơn bán hàng:</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
+                <div>
+                    <label for="returnedInvoiceSymbol">Ký hiệu HĐ thu hồi:</label>
+                    <input type="text" id="returnedInvoiceSymbol" placeholder="Ký hiệu">
+                </div>
+                <div>
+                    <label for="returnedInvoiceNumber">Số HĐ thu hồi:</label>
+                    <input type="text" id="returnedInvoiceNumber" placeholder="Số hóa đơn">
+                </div>
+                <div>
+                    <label for="returnedInvoiceDate">Ngày HĐ thu hồi:</label>
+                    <input type="date" id="returnedInvoiceDate">
+                </div>
+            </div>
+            <p class="mb-2">Và xuất hóa đơn khác cho khách hàng:</p>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label for="newInvoiceSymbol">Ký hiệu HĐ mới:</label>
+                    <input type="text" id="newInvoiceSymbol" placeholder="Ký hiệu">
+                </div>
+                <div>
+                    <label for="newInvoiceNumber">Số HĐ mới:</label>
+                    <input type="text" id="newInvoiceNumber" placeholder="Số hóa đơn">
+                </div>
+                 <div>
+                    <label for="newInvoiceDate">Ngày HĐ mới:</label>
+                    <input type="date" id="newInvoiceDate">
+                </div>
+            </div>
+        </section>
+
+        <p class="my-6 text-center">Nay chúng tôi lập biên bản ghi nhận việc thu hồi số hóa đơn trên.</p>
+
+        <div class="signature-section">
+            <div class="signature-block">
+                <h3 class="font-semibold">KHÁCH HÀNG</h3>
+                <p class="text-sm">(Ký, ghi rõ họ tên)</p>
+                <div style="height: 50px;"></div> </div>
+            <div class="signature-block">
+                <h3 class="font-semibold">ĐẠI DIỆN CỬA HÀNG</h3>
+                <p class="text-sm">(Ký, ghi rõ họ tên, đóng dấu nếu có)</p>
+                 <div style="height: 50px;"></div> </div>
+        </div>
+
+        <div class="mt-8 text-center">
+            <button type="button" id="generatePdfBtn" class="btn btn-primary">Tạo và Tải PDF</button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize jsPDF
+        const { jsPDF } = window.jspdf;
+
+        // Function to add a new row to the product table
+        function addProductRow() {
+            const tableBody = document.getElementById('productTable').getElementsByTagName('tbody')[0];
+            const newRow = tableBody.insertRow();
+            newRow.innerHTML = `
+                <td><input type="text" class="product-code" placeholder="Mã SP"></td>
+                <td><input type="number" class="product-quantity" placeholder="SL" min="0"></td>
+                <td><input type="number" class="product-weight-total" placeholder="kg" min="0" step="0.01"></td>
+                <td><input type="number" class="product-weight-q10" placeholder="kg" min="0" step="0.01"></td>
+                <td><input type="number" class="product-price" placeholder="VNĐ" min="0"></td>
+                <td><input type="number" class="product-amount" placeholder="VNĐ" readonly></td>
+                <td><input type="text" class="product-notes" placeholder="Ghi chú"></td>
+                <td><button type="button" class="btn btn-danger btn-sm remove-row-btn">Xóa</button></td>
+            `;
+            // Add event listener for remove button
+            newRow.querySelector('.remove-row-btn').addEventListener('click', function() {
+                newRow.remove();
+                updateTotalAmounts();
+            });
+
+            // Add event listeners for auto-calculating "Thành tiền"
+            const quantityInput = newRow.querySelector('.product-quantity');
+            const priceInput = newRow.querySelector('.product-price');
+            const amountInput = newRow.querySelector('.product-amount');
+
+            function calculateAmount() {
+                const quantity = parseFloat(quantityInput.value) || 0;
+                const price = parseFloat(priceInput.value) || 0;
+                amountInput.value = (quantity * price).toFixed(0);
+            }
+            quantityInput.addEventListener('input', calculateAmount);
+            priceInput.addEventListener('input', calculateAmount);
+        }
+
+        // Add initial rows (e.g., 1 to start)
+        document.addEventListener('DOMContentLoaded', () => {
+            addProductRow(); // Add one row by default
+            // Set current date for top date fields by default
+            const today = new Date();
+            document.getElementById('formDay').value = String(today.getDate()).padStart(2, '0');
+            document.getElementById('formMonth').value = String(today.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
+            document.getElementById('formYear').value = today.getFullYear();
+            document.getElementById('recordDay').value = String(today.getDate()).padStart(2, '0');
+            document.getElementById('recordMonth').value = String(today.getMonth() + 1).padStart(2, '0');
+            document.getElementById('recordYear').value = today.getFullYear();
+        });
+
+
+        // Event listener for "Thêm sản phẩm" button
+        document.getElementById('addRowBtn').addEventListener('click', addProductRow);
+
+        // Function to update total amounts (if needed, e.g., a grand total)
+        function updateTotalAmounts() {
+            // This function can be expanded if you need to sum up all "Thành tiền"
+        }
+
+        // Function to generate PDF
+        document.getElementById('generatePdfBtn').addEventListener('click', function() {
+            const doc = new jsPDF();
+
+            // Add font - jsPDF uses helvetica by default. For Vietnamese, a compatible font is needed.
+            // This example uses built-in fonts. For full Vietnamese support, you might need to embed a font like 'Arial Unicode MS'
+            // or use a library that handles this better, or ensure the user's system has appropriate fonts.
+            // For this example, we'll try with standard fonts.
+            doc.setFont('helvetica', 'normal'); // Or 'times'
+
+            let yPos = 15; // Initial Y position for text
+
+            // Helper function to add text and move yPos
+            function addText(text, x, y, options = {}) {
+                // Ensure text is a string to prevent errors with jsPDF
+                const textToPrint = String(text === null || text === undefined ? '' : text);
+                doc.text(textToPrint, x, y, options);
+                // Approximate line height, adjust as needed
+                const lineHeight = options.fontSize ? options.fontSize * 0.352778 * 1.2 : 7; 
+                return y + lineHeight;
+            }
+            
+            // Helper function to get input value or default
+            function getValue(id, defaultValue = '') {
+                const element = document.getElementById(id);
+                if (element) {
+                    // For select elements, get the value of the selected option
+                    if (element.tagName === 'SELECT') {
+                        return element.options[element.selectedIndex].value;
+                    }
+                    return element.value;
+                }
+                return defaultValue;
+            }
+            
+            function getDateValue(id) {
+                const dateVal = getValue(id);
+                if (dateVal) {
+                    const [year, month, day] = dateVal.split('-');
+                    return `${day}/${month}/${year}`;
+                }
+                return '...........';
+            }
+
+
+            // --- Page Header ---
+            const formLocation = getValue('formLocation', '...........');
+            const formDay = getValue('formDay', '...');
+            const formMonth = getValue('formMonth', '...');
+            const formYear = getValue('formYear', '...');
+            const headerDateString = `${formLocation}, ngày ${formDay} tháng ${formMonth} năm ${formYear}`;
+            doc.setFontSize(10);
+            doc.text(headerDateString, 195, yPos, { align: 'right' });
+            yPos += 10;
+
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text("BIÊN BẢN HÀNG BÁN TRẢ LẠI KIÊM THU HỒI HÓA ĐƠN", 105, yPos, { align: 'center' });
+            yPos += 8;
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+
+            const recordDay = getValue('recordDay', '...');
+            const recordMonth = getValue('recordMonth', '...');
+            const recordYear = getValue('recordYear', '...');
+            doc.text(`Hôm nay ngày ${recordDay} tháng ${recordMonth} năm ${recordYear} chúng tôi gồm có:`, 15, yPos);
+            yPos += 10;
+
+            // --- I/ ĐẠI DIỆN CỬA HÀNG ---
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'bold');
+            yPos = addText("I/ ĐẠI DIỆN CỬA HÀNG:", 15, yPos);
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            yPos = addText(`1. Cửa hàng trưởng: ${getValue('storeManager', '...............................................')}`, 20, yPos);
+            yPos = addText(`2. Kế toán cửa hàng: ${getValue('storeAccountant', '..............................................')}`, 20, yPos);
+            yPos = addText(`3. Nhân viên bán hàng tại quầy: ${getValue('salesStaff', '...............................................')}   Quầy số: ${getValue('counterNumber', '..........')}`, 20, yPos);
+            yPos += 5;
+
+            // --- II/ KHÁCH HÀNG ---
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'bold');
+            yPos = addText("II/ KHÁCH HÀNG:", 15, yPos);
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            yPos = addText(`Họ tên: ${getValue('customerName', '...................................................')}`, 20, yPos);
+            yPos = addText(`Địa chỉ liên lạc: ${getValue('customerAddress', '.....................................................................')}`, 20, yPos);
+            yPos = addText(`CMND Số: ${getValue('customerIdNumber', '..........................................')} Cấp ngày: ${getDateValue('customerIdDate')} Tại: ${getValue('customerIdPlace', '................................')}`, 20, yPos);
+            yPos += 10;
+
+            // --- Product Table ---
+            const tableRows = document.getElementById('productTable').getElementsByTagName('tbody')[0].rows;
+            const tableData = [];
+            if (tableRows.length > 0) { // Check if there are any product rows
+                for (let i = 0; i < tableRows.length; i++) {
+                    const cells = tableRows[i].getElementsByTagName('input');
+                    if (cells.length >= 7) { // Ensure all inputs exist in the row
+                        tableData.push([
+                            cells[0].value, // Mã sản phẩm
+                            cells[1].value, // Số lượng
+                            cells[2].value, // Trọng lượng các loại
+                            cells[3].value, // Trọng lượng Q10
+                            cells[4].value, // Đơn giá
+                            cells[5].value, // Thành tiền
+                            cells[6].value  // Ghi chú
+                        ]);
+                    }
+                }
+            }
+
+
+            if (tableData.length > 0) {
+                doc.autoTable({
+                    head: [['Mã sản phẩm', 'Số lượng', 'Trọng lượng các loại (kg)', 'Trọng lượng Q10 (kg)', 'Đơn giá (VNĐ)', 'Thành tiền (VNĐ)', 'Ghi chú']],
+                    body: tableData,
+                    startY: yPos,
+                    theme: 'grid', // 'striped', 'grid', 'plain'
+                    headStyles: { fillColor: [220, 220, 220], textColor: 20, fontStyle: 'bold', halign: 'center' },
+                    styles: { fontSize: 9, cellPadding: 2, font: 'helvetica' }, // Ensure font is applied
+                    columnStyles: {
+                        0: { cellWidth: 25 }, // Mã sản phẩm
+                        1: { cellWidth: 15, halign: 'right' }, // Số lượng
+                        2: { cellWidth: 30, halign: 'right' }, // Trọng lượng các loại
+                        3: { cellWidth: 30, halign: 'right' }, // Trọng lượng Q10
+                        4: { cellWidth: 25, halign: 'right' }, // Đơn giá
+                        5: { cellWidth: 25, halign: 'right' }, // Thành tiền
+                        6: { cellWidth: 'auto' }, // Ghi chú
+                    },
+                    didDrawPage: function (data) {
+                        yPos = data.cursor.y + 5; // Update yPos after table
+                    }
+                });
+                // Ensure yPos is updated correctly after autotable if it spans pages
+                if (doc.previousAutoTable && doc.previousAutoTable.finalY) {
+                     yPos = doc.previousAutoTable.finalY + 10;
+                }
+            } else {
+                yPos = addText("Không có sản phẩm nào được trả lại.", 15, yPos, {fontStyle: 'italic'});
+                yPos += 5;
+            }
+
+
+            // --- Lý do ---
+            yPos = addText(`Vì lý do: ${getValue('returnReason', '.............................................................................................................................')}`, 15, yPos);
+            yPos += 5;
+
+            // --- Thông tin hóa đơn ---
+            const returnedInvSymbol = getValue('returnedInvoiceSymbol', '..........');
+            const returnedInvNumber = getValue('returnedInvoiceNumber', '..........');
+            const returnedInvDate = getDateValue('returnedInvoiceDate');
+
+            const newInvSymbol = getValue('newInvoiceSymbol', '..........');
+            const newInvNumber = getValue('newInvoiceNumber', '..........');
+            const newInvDate = getDateValue('newInvoiceDate');
+
+            yPos = addText(`Nhận thấy đó là lý do chính đáng nên cửa hàng chấp nhận thu hồi hóa đơn bán hàng Ký hiệu: ${returnedInvSymbol}`, 15, yPos);
+            yPos = addText(`Số: ${returnedInvNumber} Ngày: ${returnedInvDate}`, 15, yPos);
+            yPos = addText(`Và xuất hóa đơn khác cho khách hàng số: ${newInvNumber} Ngày: ${newInvDate}`, 15, yPos);
+            yPos = addText(`Ký hiệu: ${newInvSymbol}`, 15, yPos);
+            yPos += 10;
+
+            // --- Kết luận ---
+            doc.text("Nay chúng tôi lập biên bản ghi nhận việc thu hồi số hóa đơn trên.", 105, yPos, { align: 'center' });
+            yPos += 20;
+
+            // --- Chữ ký ---
+            const signatureY = yPos > 240 ? 260 : yPos + 15; // Check if new page needed for signatures
+            if (signatureY > 270) { // If signatures push off page, add new page
+                 doc.addPage();
+                 yPos = 20; // Reset yPos for new page
+            } else {
+                 yPos = signatureY;
+            }
+
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'bold');
+            doc.text("KHÁCH HÀNG", 50, yPos, { align: 'center' });
+            doc.text("ĐẠI DIỆN CỬA HÀNG", 160, yPos, { align: 'center' });
+            yPos += 5;
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(9);
+            doc.text("(Ký, ghi rõ họ tên)", 50, yPos, { align: 'center' });
+            doc.text("(Ký, ghi rõ họ tên, đóng dấu nếu có)", 160, yPos, { align: 'center' });
+
+            // Save the PDF
+            doc.save('BienBanHangBanTraLai.pdf');
+        });
+
+    </script>
+</body>
+</html>
