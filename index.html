@@ -80,6 +80,9 @@
             cursor: pointer;
             transition: background-color 0.2s;
             text-align: center;
+            display: inline-flex; /* For aligning icon and text */
+            align-items: center;
+            gap: 0.5rem; /* Space between icon and text */
         }
         .btn-primary {
             background-color: #4299e1; /* Blue button */
@@ -96,6 +99,14 @@
         }
         .btn-secondary:hover {
             background-color: #38a169;
+        }
+        .btn-warning {
+            background-color: #f6ad55; /* Orange button for suggestion */
+            color: white;
+            border: none;
+        }
+        .btn-warning:hover {
+            background-color: #ed8936;
         }
         .btn-danger {
             background-color: #f56565; /* Red button */
@@ -133,12 +144,40 @@
         /* Styling for the select element to match other inputs */
         select#counterNumber {
              /* Ensures it takes up available width like other inputs in its container if needed */
-            /* padding is already covered by the general select style */
-            /* border and border-radius are also covered */
+        }
+        .loading-spinner {
+            border: 2px solid #f3f3f3; /* Light grey */
+            border-top: 2px solid #4299e1; /* Blue */
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            display: inline-block; /* To sit next to text */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .message-box {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #f56565; /* Red for error */
+            color: white;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none; /* Hidden by default */
+        }
+        .message-box.success {
+            background-color: #48bb78; /* Green for success */
         }
     </style>
 </head>
 <body>
+    <div id="messageBox" class="message-box"></div>
     <div class="container">
         <header class="text-center mb-8">
             <div class="inline-inputs mb-2 text-right">
@@ -233,9 +272,15 @@
 
         <section class="mb-6 p-4 border rounded-md shadow-sm">
             <h2 class="text-xl font-semibold mb-3">LÝ DO TRẢ HÀNG</h2>
-            <div>
-                <label for="returnReason">Vì lý do:</label>
-                <textarea id="returnReason" rows="3" placeholder="Nêu rõ lý do trả hàng"></textarea>
+            <div class="flex items-start gap-2">
+                <div class="flex-grow">
+                    <label for="returnReason">Vì lý do:</label>
+                    <textarea id="returnReason" rows="3" placeholder="Nêu rõ lý do trả hàng"></textarea>
+                </div>
+                <button type="button" id="suggestReasonBtn" class="btn btn-warning mt-7">
+                    Gợi ý Lý do ✨
+                    <span id="suggestReasonSpinner" class="loading-spinner" style="display: none;"></span>
+                </button>
             </div>
         </section>
 
@@ -295,6 +340,17 @@
         // Initialize jsPDF
         const { jsPDF } = window.jspdf;
 
+        // Function to display messages
+        function showMessage(message, type = 'error') {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            messageBox.className = `message-box ${type}`; // Apply 'error' or 'success' class
+            messageBox.style.display = 'block';
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, 3000); // Hide after 3 seconds
+        }
+
         // Function to add a new row to the product table
         function addProductRow() {
             const tableBody = document.getElementById('productTable').getElementsByTagName('tbody')[0];
@@ -307,12 +363,12 @@
                 <td><input type="number" class="product-price" placeholder="VNĐ" min="0"></td>
                 <td><input type="number" class="product-amount" placeholder="VNĐ" readonly></td>
                 <td><input type="text" class="product-notes" placeholder="Ghi chú"></td>
-                <td><button type="button" class="btn btn-danger btn-sm remove-row-btn">Xóa</button></td>
+                <td><button type="button" class="btn btn-danger btn-sm remove-row-btn !p-2">Xóa</button></td>
             `;
             // Add event listener for remove button
             newRow.querySelector('.remove-row-btn').addEventListener('click', function() {
                 newRow.remove();
-                updateTotalAmounts();
+                // No need to call updateTotalAmounts if it's empty
             });
 
             // Add event listeners for auto-calculating "Thành tiền"
@@ -346,38 +402,110 @@
         // Event listener for "Thêm sản phẩm" button
         document.getElementById('addRowBtn').addEventListener('click', addProductRow);
 
-        // Function to update total amounts (if needed, e.g., a grand total)
-        function updateTotalAmounts() {
-            // This function can be expanded if you need to sum up all "Thành tiền"
-        }
+        // --- Gemini API Integration for Suggesting Return Reason ---
+        const suggestReasonBtn = document.getElementById('suggestReasonBtn');
+        const returnReasonTextarea = document.getElementById('returnReason');
+        const suggestReasonSpinner = document.getElementById('suggestReasonSpinner');
+
+        suggestReasonBtn.addEventListener('click', async () => {
+            const customerName = document.getElementById('customerName').value.trim();
+            const productRows = document.getElementById('productTable').getElementsByTagName('tbody')[0].rows;
+            let productsInfo = "";
+
+            if (productRows.length === 0) {
+                showMessage('Vui lòng thêm ít nhất một sản phẩm để nhận gợi ý lý do.');
+                return;
+            }
+
+            for (let i = 0; i < productRows.length; i++) {
+                const cells = productRows[i].getElementsByTagName('input');
+                const productCode = cells[0].value.trim();
+                const quantity = cells[1].value.trim();
+                const notes = cells[6].value.trim(); // Ghi chú sản phẩm
+
+                if (productCode) { // Only include if product code exists
+                    productsInfo += `Sản phẩm ${i+1}: Mã "${productCode}", Số lượng: ${quantity || 'không rõ'}.`;
+                    if (notes) {
+                        productsInfo += ` Ghi chú: "${notes}".`;
+                    }
+                    productsInfo += "\n";
+                }
+            }
+
+            if (!productsInfo) {
+                 showMessage('Không có thông tin sản phẩm nào được nhập để tạo gợi ý.');
+                 return;
+            }
+
+            let prompt = `Khách hàng tên là "${customerName || 'Khách hàng'}" muốn trả lại các sản phẩm sau:\n${productsInfo}\n`;
+            prompt += `Dựa trên thông tin này, hãy viết một lý do trả hàng ngắn gọn, lịch sự và chuyên nghiệp bằng tiếng Việt để điền vào biên bản. Ví dụ: "Sản phẩm không đúng quy cách", "Sản phẩm bị lỗi", "Thay đổi nhu cầu sử dụng".`;
+
+            suggestReasonBtn.disabled = true;
+            suggestReasonSpinner.style.display = 'inline-block';
+            returnReasonTextarea.value = "Đang lấy gợi ý...";
+
+            try {
+                let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // API key will be handled by the environment
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Gemini API Error:', errorData);
+                    throw new Error(`Lỗi API: ${errorData.error?.message || response.statusText}`);
+                }
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    returnReasonTextarea.value = text.trim();
+                    showMessage('Gợi ý lý do đã được tạo!', 'success');
+                } else {
+                    console.error('Unexpected API response structure:', result);
+                    throw new Error('Không nhận được nội dung gợi ý từ API.');
+                }
+
+            } catch (error) {
+                console.error('Error fetching suggestion:', error);
+                returnReasonTextarea.value = ''; // Clear textarea on error
+                showMessage(`Lỗi khi tạo gợi ý: ${error.message}`);
+            } finally {
+                suggestReasonBtn.disabled = false;
+                suggestReasonSpinner.style.display = 'none';
+                if (returnReasonTextarea.value === "Đang lấy gợi ý...") {
+                    returnReasonTextarea.value = ""; // Clear if it was stuck on loading
+                }
+            }
+        });
+
 
         // Function to generate PDF
         document.getElementById('generatePdfBtn').addEventListener('click', function() {
             const doc = new jsPDF();
+            doc.setFont('helvetica', 'normal');
 
-            // Add font - jsPDF uses helvetica by default. For Vietnamese, a compatible font is needed.
-            // This example uses built-in fonts. For full Vietnamese support, you might need to embed a font like 'Arial Unicode MS'
-            // or use a library that handles this better, or ensure the user's system has appropriate fonts.
-            // For this example, we'll try with standard fonts.
-            doc.setFont('helvetica', 'normal'); // Or 'times'
+            let yPos = 15;
 
-            let yPos = 15; // Initial Y position for text
-
-            // Helper function to add text and move yPos
             function addText(text, x, y, options = {}) {
-                // Ensure text is a string to prevent errors with jsPDF
                 const textToPrint = String(text === null || text === undefined ? '' : text);
                 doc.text(textToPrint, x, y, options);
-                // Approximate line height, adjust as needed
-                const lineHeight = options.fontSize ? options.fontSize * 0.352778 * 1.2 : 7; 
+                const lineHeight = options.fontSize ? options.fontSize * 0.352778 * 1.2 : 7;
                 return y + lineHeight;
             }
-            
-            // Helper function to get input value or default
+
             function getValue(id, defaultValue = '') {
                 const element = document.getElementById(id);
                 if (element) {
-                    // For select elements, get the value of the selected option
                     if (element.tagName === 'SELECT') {
                         return element.options[element.selectedIndex].value;
                     }
@@ -385,7 +513,7 @@
                 }
                 return defaultValue;
             }
-            
+
             function getDateValue(id) {
                 const dateVal = getValue(id);
                 if (dateVal) {
@@ -395,8 +523,6 @@
                 return '...........';
             }
 
-
-            // --- Page Header ---
             const formLocation = getValue('formLocation', '...........');
             const formDay = getValue('formDay', '...');
             const formMonth = getValue('formMonth', '...');
@@ -419,7 +545,6 @@
             doc.text(`Hôm nay ngày ${recordDay} tháng ${recordMonth} năm ${recordYear} chúng tôi gồm có:`, 15, yPos);
             yPos += 10;
 
-            // --- I/ ĐẠI DIỆN CỬA HÀNG ---
             doc.setFontSize(11);
             doc.setFont('helvetica', 'bold');
             yPos = addText("I/ ĐẠI DIỆN CỬA HÀNG:", 15, yPos);
@@ -430,7 +555,6 @@
             yPos = addText(`3. Nhân viên bán hàng tại quầy: ${getValue('salesStaff', '...............................................')}   Quầy số: ${getValue('counterNumber', '..........')}`, 20, yPos);
             yPos += 5;
 
-            // --- II/ KHÁCH HÀNG ---
             doc.setFontSize(11);
             doc.setFont('helvetica', 'bold');
             yPos = addText("II/ KHÁCH HÀNG:", 15, yPos);
@@ -441,49 +565,36 @@
             yPos = addText(`CMND Số: ${getValue('customerIdNumber', '..........................................')} Cấp ngày: ${getDateValue('customerIdDate')} Tại: ${getValue('customerIdPlace', '................................')}`, 20, yPos);
             yPos += 10;
 
-            // --- Product Table ---
             const tableRows = document.getElementById('productTable').getElementsByTagName('tbody')[0].rows;
             const tableData = [];
-            if (tableRows.length > 0) { // Check if there are any product rows
+            if (tableRows.length > 0) {
                 for (let i = 0; i < tableRows.length; i++) {
                     const cells = tableRows[i].getElementsByTagName('input');
-                    if (cells.length >= 7) { // Ensure all inputs exist in the row
+                    if (cells.length >= 7) {
                         tableData.push([
-                            cells[0].value, // Mã sản phẩm
-                            cells[1].value, // Số lượng
-                            cells[2].value, // Trọng lượng các loại
-                            cells[3].value, // Trọng lượng Q10
-                            cells[4].value, // Đơn giá
-                            cells[5].value, // Thành tiền
-                            cells[6].value  // Ghi chú
+                            cells[0].value, cells[1].value, cells[2].value, cells[3].value,
+                            cells[4].value, cells[5].value, cells[6].value
                         ]);
                     }
                 }
             }
-
 
             if (tableData.length > 0) {
                 doc.autoTable({
                     head: [['Mã sản phẩm', 'Số lượng', 'Trọng lượng các loại (kg)', 'Trọng lượng Q10 (kg)', 'Đơn giá (VNĐ)', 'Thành tiền (VNĐ)', 'Ghi chú']],
                     body: tableData,
                     startY: yPos,
-                    theme: 'grid', // 'striped', 'grid', 'plain'
+                    theme: 'grid',
                     headStyles: { fillColor: [220, 220, 220], textColor: 20, fontStyle: 'bold', halign: 'center' },
-                    styles: { fontSize: 9, cellPadding: 2, font: 'helvetica' }, // Ensure font is applied
+                    styles: { fontSize: 9, cellPadding: 2, font: 'helvetica' },
                     columnStyles: {
-                        0: { cellWidth: 25 }, // Mã sản phẩm
-                        1: { cellWidth: 15, halign: 'right' }, // Số lượng
-                        2: { cellWidth: 30, halign: 'right' }, // Trọng lượng các loại
-                        3: { cellWidth: 30, halign: 'right' }, // Trọng lượng Q10
-                        4: { cellWidth: 25, halign: 'right' }, // Đơn giá
-                        5: { cellWidth: 25, halign: 'right' }, // Thành tiền
-                        6: { cellWidth: 'auto' }, // Ghi chú
+                        0: { cellWidth: 25 }, 1: { cellWidth: 15, halign: 'right' },
+                        2: { cellWidth: 30, halign: 'right' }, 3: { cellWidth: 30, halign: 'right' },
+                        4: { cellWidth: 25, halign: 'right' }, 5: { cellWidth: 25, halign: 'right' },
+                        6: { cellWidth: 'auto' },
                     },
-                    didDrawPage: function (data) {
-                        yPos = data.cursor.y + 5; // Update yPos after table
-                    }
+                    didDrawPage: function (data) { yPos = data.cursor.y + 5; }
                 });
-                // Ensure yPos is updated correctly after autotable if it spans pages
                 if (doc.previousAutoTable && doc.previousAutoTable.finalY) {
                      yPos = doc.previousAutoTable.finalY + 10;
                 }
@@ -492,16 +603,20 @@
                 yPos += 5;
             }
 
+            // Check if yPos is too close to the bottom, if so, add a new page
+            if (yPos > 250) { // Adjust this threshold as needed
+                doc.addPage();
+                yPos = 15; // Reset yPos for the new page
+            }
 
-            // --- Lý do ---
             yPos = addText(`Vì lý do: ${getValue('returnReason', '.............................................................................................................................')}`, 15, yPos);
             yPos += 5;
 
-            // --- Thông tin hóa đơn ---
+            if (yPos > 250) { doc.addPage(); yPos = 15; }
+
             const returnedInvSymbol = getValue('returnedInvoiceSymbol', '..........');
             const returnedInvNumber = getValue('returnedInvoiceNumber', '..........');
             const returnedInvDate = getDateValue('returnedInvoiceDate');
-
             const newInvSymbol = getValue('newInvoiceSymbol', '..........');
             const newInvNumber = getValue('newInvoiceNumber', '..........');
             const newInvDate = getDateValue('newInvoiceDate');
@@ -512,17 +627,17 @@
             yPos = addText(`Ký hiệu: ${newInvSymbol}`, 15, yPos);
             yPos += 10;
 
-            // --- Kết luận ---
+            if (yPos > 250) { doc.addPage(); yPos = 15; }
+
             doc.text("Nay chúng tôi lập biên bản ghi nhận việc thu hồi số hóa đơn trên.", 105, yPos, { align: 'center' });
             yPos += 20;
 
-            // --- Chữ ký ---
-            const signatureY = yPos > 240 ? 260 : yPos + 15; // Check if new page needed for signatures
-            if (signatureY > 270) { // If signatures push off page, add new page
+            const signatureYBase = yPos;
+            if (signatureYBase > 240 ) { // Check if signatures need a new page
                  doc.addPage();
-                 yPos = 20; // Reset yPos for new page
+                 yPos = 20;
             } else {
-                 yPos = signatureY;
+                 yPos = signatureYBase;
             }
 
             doc.setFontSize(10);
@@ -535,10 +650,8 @@
             doc.text("(Ký, ghi rõ họ tên)", 50, yPos, { align: 'center' });
             doc.text("(Ký, ghi rõ họ tên, đóng dấu nếu có)", 160, yPos, { align: 'center' });
 
-            // Save the PDF
             doc.save('BienBanHangBanTraLai.pdf');
         });
-
     </script>
 </body>
 </html>
