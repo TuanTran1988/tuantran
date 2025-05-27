@@ -1,92 +1,502 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Calculator đơn giản</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 300px;
-      margin: 50px auto;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-    input[type="text"] {
-      width: 100%;
-      height: 40px;
-      font-size: 1.5em;
-      text-align: right;
-      margin-bottom: 10px;
-      padding: 5px;
-    }
-    button {
-      width: 23%;
-      height: 40px;
-      margin: 1%;
-      font-size: 1.2em;
-      cursor: pointer;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographic: Tổng Hợp Chính Sách PNJ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- 
+        Kế hoạch tổng thể (Narrative & Structure):
+        1.  Giới thiệu: Tổng quan về PNJ và cam kết chính sách.
+        2.  Chính Sách Bảo Hành và Thu Đổi: Chi tiết về bảo hành sản phẩm và điều kiện thu đổi.
+        3.  Chính Sách Giao Hàng: Thông tin về vận chuyển, kiểm tra hàng và bảo hiểm.
+        4.  Chính Sách Khách Hàng Thân Thiết: Cách tích điểm và quyền lợi thành viên.
+        5.  Chính Sách Bảo Mật Thông Tin: Cam kết bảo vệ dữ liệu cá nhân.
+        6.  Chính Sách Trả Góp: Điều kiện và lợi ích của mua hàng trả góp.
+        7.  Các Chương Trình Ưu Đãi: Tổng quan về các khuyến mãi thường gặp.
+        8.  Kết luận: Lời kêu gọi hành động và thông tin liên hệ.
+
+        Lựa chọn Palette Màu: "Energetic & Playful"
+        - Primary: #FF6B6B (Coral Red)
+        - Secondary: #4ECDC4 (Turquoise)
+        - Accent: #45B7D1 (Sky Blue)
+        - Neutral Dark: #1A535C (Dark Teal)
+        - Neutral Light: #F7FFF7 (Mint Cream) / #FFFFFF (White)
+
+        Lựa chọn trực quan hóa (Visualization Choices - Data Point -> Goal -> Chosen Visualization -> Justification/Library/Method - Confirming NO SVG, NO MERMAID JS):
+        - Giới thiệu: Văn bản. Mục tiêu: Thông báo. Phương pháp: HTML/CSS.
+        - Chính Sách Bảo Hành:
+            - "Bảo hành kỹ thuật 6 tháng", "Đánh bóng miễn phí", "Thay đá miễn phí", "Nhẫn cưới làm mới trọn đời": Mục tiêu: Thông báo. Phương pháp: Icon (Unicode) + Văn bản trong card (HTML/CSS). NO SVG.
+        - Chính Sách Thu Đổi:
+            - "48 giờ đổi/trả": Mục tiêu: Thông báo. Phương pháp: Số lớn (HTML/CSS). NO SVG.
+            - "Tỷ lệ thu đổi (100%, 90%, 70%)": Mục tiêu: So sánh. Phương pháp: Cấu trúc div so sánh (HTML/CSS). NO SVG.
+        - Chính Sách Giao Hàng:
+            - "Miễn phí toàn quốc", "Kiểm tra hàng", "COD", "Bảo hiểm 100%": Mục tiêu: Thông báo. Phương pháp: Icon (Unicode) + Văn bản trong card (HTML/CSS). NO SVG.
+        - Chính Sách Khách Hàng Thân Thiết:
+            - "Quy trình tích điểm": Mục tiêu: Tổ chức. Phương pháp: Sơ đồ dòng chảy đơn giản (HTML/CSS với flexbox/borders). NO SVG.
+            - "Bảng quy đổi điểm (ví dụ)": Mục tiêu: So sánh/Tổ chức. Phương pháp: Bảng HTML (HTML `<table>`). NO SVG.
+        - Chính Sách Bảo Mật:
+            - "Cam kết bảo mật": Mục tiêu: Thông báo. Phương pháp: Icon (Unicode) + Văn bản (HTML/CSS). NO SVG.
+        - Chính Sách Trả Góp:
+            - "Trả góp 0%": Mục tiêu: Thông báo. Phương pháp: Số lớn (HTML/CSS). NO SVG.
+            - "Kỳ hạn": Mục tiêu: Thông báo. Phương pháp: Danh sách HTML (`<ul>`). NO SVG.
+        - Các Chương Trình Ưu Đãi:
+            - "Tổng quan ưu đãi": Mục tiêu: Thông báo. Phương pháp: Icon (Unicode) + Văn bản trong card (HTML/CSS). NO SVG.
+            - "Phân bổ loại hình khuyến mãi (ví dụ)": Mục tiêu: So sánh/Thông báo. Phương pháp: Biểu đồ Donut (Chart.js - Canvas). NO SVG.
+        - Kết luận: Văn bản. Mục tiêu: Thông báo. Phương pháp: HTML/CSS.
+
+        Xác nhận: KHÔNG SỬ DỤNG SVG. KHÔNG SỬ DỤNG MERMAID JS.
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F7FFF7; /* Mint Cream */
+        }
+        .text-coral-red { color: #FF6B6B; }
+        .bg-coral-red { background-color: #FF6B6B; }
+        .border-coral-red { border-color: #FF6B6B; }
+
+        .text-turquoise { color: #4ECDC4; }
+        .bg-turquoise { background-color: #4ECDC4; }
+        .border-turquoise { border-color: #4ECDC4; }
+
+        .text-sky-blue { color: #45B7D1; }
+        .bg-sky-blue { background-color: #45B7D1; }
+        
+        .text-dark-teal { color: #1A535C; }
+        .bg-dark-teal { background-color: #1A535C; }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px; /* Adjusted for donut chart */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; 
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .icon-text {
+            font-size: 2rem;
+            margin-right: 0.75rem;
+        }
+        .policy-point {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .policy-point-text h4 {
+            font-weight: 600;
+            color: #1A535C; /* Dark Teal */
+        }
+        .policy-point-text p {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .flow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 1rem;
+            background-color: #FFFFFF;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex: 1;
+            margin: 0 0.5rem;
+        }
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: #FF6B6B; /* Coral Red */
+            margin: 0 0.5rem;
+            align-self: center;
+        }
+    </style>
 </head>
-<body>
-  <h2>Calculator đơn giản</h2>
-  <input type="text" id="display" disabled />
-  <div>
-    <button onclick="appendNumber('7')">7</button>
-    <button onclick="appendNumber('8')">8</button>
-    <button onclick="appendNumber('9')">9</button>
-    <button onclick="appendOperator('/')">÷</button>
+<body class="text-dark-teal">
 
-    <button onclick="appendNumber('4')">4</button>
-    <button onclick="appendNumber('5')">5</button>
-    <button onclick="appendNumber('6')">6</button>
-    <button onclick="appendOperator('*')">×</button>
+    <header class="bg-dark-teal text-white py-8 text-center">
+        <div class="container mx-auto px-4">
+            <h1 class="text-4xl font-bold">Chính Sách PNJ: Đồng Hành Cùng Bạn</h1>
+            <p class="mt-2 text-lg text-gray-300">Khám phá các chính sách toàn diện được thiết kế vì quyền lợi và trải nghiệm tốt nhất của khách hàng tại PNJ.</p>
+        </div>
+    </header>
 
-    <button onclick="appendNumber('1')">1</button>
-    <button onclick="appendNumber('2')">2</button>
-    <button onclick="appendNumber('3')">3</button>
-    <button onclick="appendOperator('-')">−</button>
+    <main class="container mx-auto px-4 py-8">
+        
+        <section id="bao-hanh-thu-doi" class="mb-12">
+            <h2 class="section-title text-coral-red">1. Chính Sách Bảo Hành và Thu Đổi</h2>
+            <p class="text-center mb-6 text-gray-700">PNJ cam kết chất lượng sản phẩm và dịch vụ hậu mãi chu đáo, mang đến sự an tâm tuyệt đối cho quý khách.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="card">
+                    <h3 class="text-2xl font-semibold mb-4 text-turquoise">Bảo Hành Sản Phẩm</h3>
+                    <div class="policy-point">
+                        <span class="icon-text text-coral-red">🔧</span>
+                        <div class="policy-point-text">
+                            <h4>Bảo Hành Kỹ Thuật 6 Tháng</h4>
+                            <p>Miễn phí cho lỗi kỹ thuật, nước xi, và điều chỉnh ni sản phẩm.</p>
+                        </div>
+                    </div>
+                    <div class="policy-point">
+                        <span class="icon-text text-coral-red">✨</span>
+                        <div class="policy-point-text">
+                            <h4>Đánh Bóng & Siêu Âm Trọn Đời</h4>
+                            <p>Dịch vụ làm mới, đánh bóng, siêu âm sản phẩm miễn phí không giới hạn thời gian.</p>
+                        </div>
+                    </div>
+                    <div class="policy-point">
+                        <span class="icon-text text-coral-red">💎</span>
+                        <div class="policy-point-text">
+                            <h4>Thay Đá Miễn Phí</h4>
+                            <p>Miễn phí thay đá tổng hợp, CZ, ECZ trong suốt thời gian sản phẩm còn bảo hành.</p>
+                        </div>
+                    </div>
+                    <div class="policy-point">
+                        <span class="icon-text text-coral-red">💍</span>
+                        <div class="policy-point-text">
+                            <h4>Đặc Quyền Nhẫn Cưới</h4>
+                            <p>Làm mới, đánh bóng, xi miễn phí trọn đời (không bao gồm chi phí nguyên liệu phát sinh).</p>
+                        </div>
+                    </div>
+                </div>
 
-    <button onclick="appendNumber('0')">0</button>
-    <button onclick="appendNumber('.')">.</button>
-    <button onclick="clearDisplay()">C</button>
-    <button onclick="appendOperator('+')">+</button>
+                <div class="card">
+                    <h3 class="text-2xl font-semibold mb-4 text-turquoise">Thu Đổi Sản Phẩm</h3>
+                    <div class="text-center mb-4">
+                        <p class="text-5xl font-bold text-coral-red">48 GIỜ</p>
+                        <p class="text-gray-700">Thời gian vàng để đổi hoặc trả sản phẩm nếu bạn thay đổi quyết định.</p>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="bg-gray-100 p-3 rounded-md">
+                            <h4 class="font-semibold text-dark-teal">Sản phẩm mới ≥ Sản phẩm cũ:</h4>
+                            <p class="text-gray-600">PNJ thu lại <span class="font-bold text-coral-red">100%</span> giá trị hóa đơn ban đầu.</p>
+                        </div>
+                        <div class="bg-gray-100 p-3 rounded-md">
+                            <h4 class="font-semibold text-dark-teal">Sản phẩm mới < Sản phẩm cũ:</h4>
+                            <p class="text-gray-600">PNJ thu lại <span class="font-bold text-coral-red">90%</span> giá trị hóa đơn ban đầu.</p>
+                        </div>
+                        <div class="bg-gray-100 p-3 rounded-md">
+                            <h4 class="font-semibold text-dark-teal">Trang sức tính công:</h4>
+                            <p class="text-gray-600">Thu lại khoảng <span class="font-bold text-coral-red">70%</span> giá trị tiền công. Giá trị vàng theo thời giá.</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-3">* Chính sách thu đổi có thể không áp dụng tại một số cửa hàng trong TTTM.</p>
+                </div>
+            </div>
+        </section>
 
-    <button style="width: 98%" onclick="calculateResult()">=</button>
-  </div>
+        <section id="giao-hang" class="mb-12">
+            <h2 class="section-title text-turquoise">2. Chính Sách Giao Hàng</h2>
+            <p class="text-center mb-6 text-gray-700">Trải nghiệm dịch vụ giao hàng nhanh chóng, an toàn và hoàn toàn miễn phí từ PNJ.</p>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="card text-center">
+                    <span class="text-4xl text-coral-red">🚚</span>
+                    <h4 class="font-semibold text-lg mt-2 mb-1 text-dark-teal">Miễn Phí Toàn Quốc</h4>
+                    <p class="text-sm text-gray-600">PNJ giao hàng miễn phí cho tất cả đơn hàng trên toàn lãnh thổ Việt Nam.</p>
+                </div>
+                <div class="card text-center">
+                    <span class="text-4xl text-coral-red">📦</span>
+                    <h4 class="font-semibold text-lg mt-2 mb-1 text-dark-teal">Kiểm Tra Hàng Khi Nhận</h4>
+                    <p class="text-sm text-gray-600">Khuyến khích kiểm tra sản phẩm và quay video để đảm bảo quyền lợi.</p>
+                </div>
+                <div class="card text-center">
+                    <span class="text-4xl text-coral-red">💵</span>
+                    <h4 class="font-semibold text-lg mt-2 mb-1 text-dark-teal">Thanh Toán COD</h4>
+                    <p class="text-sm text-gray-600">Dịch vụ thanh toán khi nhận hàng tiện lợi và an tâm trên toàn quốc.</p>
+                </div>
+                <div class="card text-center">
+                    <span class="text-4xl text-coral-red">🛡️</span>
+                    <h4 class="font-semibold text-lg mt-2 mb-1 text-dark-teal">Bảo Hiểm 100%</h4>
+                    <p class="text-sm text-gray-600">Hàng hóa được bảo hiểm, đền bù 100% giá trị nếu có thất lạc.</p>
+                </div>
+            </div>
+        </section>
 
-  <script>
-    const display = document.getElementById('display');
+        <section id="khach-hang-than-thiet" class="mb-12">
+            <h2 class="section-title text-coral-red">3. Chính Sách Khách Hàng Thân Thiết</h2>
+            <p class="text-center mb-6 text-gray-700">Gia nhập cộng đồng PNJ để nhận những đặc quyền và ưu đãi hấp dẫn dành riêng cho thành viên.</p>
+            <div class="card">
+                <h3 class="text-xl font-semibold mb-3 text-turquoise text-center">Quy Trình Tích Điểm & Nâng Hạng</h3>
+                <div class="flex flex-col md:flex-row justify-around items-center mb-6 p-4 bg-gray-50 rounded-lg">
+                    <div class="flow-step mb-2 md:mb-0">
+                        <span class="text-3xl">🛍️</span>
+                        <p class="font-semibold mt-1">Mua Hàng</p>
+                    </div>
+                    <div class="flow-arrow hidden md:block">➔</div>
+                     <div class="flow-step mb-2 md:mb-0">
+                        <span class="text-3xl">✨</span>
+                        <p class="font-semibold mt-1">Tích Điểm</p>
+                    </div>
+                    <div class="flow-arrow hidden md:block">➔</div>
+                    <div class="flow-step mb-2 md:mb-0">
+                        <span class="text-3xl">🏆</span>
+                        <p class="font-semibold mt-1">Xét Hạng Thẻ</p>
+                    </div>
+                    <div class="flow-arrow hidden md:block">➔</div>
+                    <div class="flow-step">
+                        <span class="text-3xl">🎁</span>
+                        <p class="font-semibold mt-1">Nhận Ưu Đãi</p>
+                    </div>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-turquoise text-center">Bảng Quy Đổi Điểm (Ví Dụ Tham Khảo)</h3>
+                <p class="text-sm text-gray-600 mb-4 text-center">Điểm tích lũy được sử dụng để xét hạng thẻ và nhận các ưu đãi tương ứng. Cách quy đổi điểm có thể khác nhau tùy theo nhóm sản phẩm và chính sách tại từng thời điểm.</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-max text-sm text-left text-gray-500 rounded-lg shadow-md">
+                        <thead class="text-xs text-white uppercase bg-turquoise">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Nhóm Sản Phẩm</th>
+                                <th scope="col" class="px-6 py-3">Quy Đổi Điểm (Ví dụ)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-white border-b hover:bg-gray-50">
+                                <td class="px-6 py-4 font-medium text-dark-teal whitespace-nowrap">Kim Cương Rời, Nữ Trang 24K</td>
+                                <td class="px-6 py-4">2,000,000 VNĐ = 1 điểm</td>
+                            </tr>
+                            <tr class="bg-white border-b hover:bg-gray-50">
+                                <td class="px-6 py-4 font-medium text-dark-teal whitespace-nowrap">Vàng Tài Lộc</td>
+                                <td class="px-6 py-4">6,000,000 VNĐ = 1 điểm</td>
+                            </tr>
+                            <tr class="bg-white border-b hover:bg-gray-50">
+                                <td class="px-6 py-4 font-medium text-dark-teal whitespace-nowrap">Vàng Khác, Đồng Hồ</td>
+                                <td class="px-6 py-4">1,000,000 VNĐ = 1 điểm</td>
+                            </tr>
+                            <tr class="bg-white hover:bg-gray-50">
+                                <td class="px-6 py-4 font-medium text-dark-teal whitespace-nowrap">Trang Sức Bạc</td>
+                                <td class="px-6 py-4">500,000 VNĐ = 10,000 VNĐ tiền chiết khấu</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
 
-    function appendNumber(num) {
-      display.value += num;
-    }
+        <div class="grid md:grid-cols-2 gap-8 mb-12">
+            <section id="bao-mat" >
+                <h2 class="section-title text-turquoise !text-2xl !mb-4">4. Chính Sách Bảo Mật</h2>
+                 <div class="card text-center h-full flex flex-col justify-center items-center">
+                    <span class="text-6xl text-coral-red">🔒</span>
+                    <h4 class="font-semibold text-xl mt-3 mb-2 text-dark-teal">An Toàn Thông Tin Tuyệt Đối</h4>
+                    <p class="text-gray-600">PNJ cam kết bảo vệ thông tin cá nhân của bạn theo Nghị định 13/2023/NĐ-CP và các quy định pháp luật hiện hành.</p>
+                </div>
+            </section>
 
-    function appendOperator(op) {
-      if(display.value === '') return; // Không cho phép operator đầu tiên
-      const lastChar = display.value.slice(-1);
-      if('+-*/'.includes(lastChar)) {
-        // Thay operator nếu operator trước đó tồn tại
-        display.value = display.value.slice(0, -1) + op;
-      } else {
-        display.value += op;
-      }
-    }
+            <section id="tra-gop">
+                <h2 class="section-title text-coral-red !text-2xl !mb-4">5. Chính Sách Trả Góp</h2>
+                <div class="card h-full">
+                    <div class="text-center">
+                        <p class="text-4xl font-bold text-turquoise">TRẢ GÓP 0%*</p>
+                        <p class="text-gray-700 mb-3">Sở hữu ngay trang sức mơ ước với lãi suất ưu đãi.</p>
+                    </div>
+                    <ul class="list-disc list-inside text-gray-600 space-y-1 pl-4">
+                        <li>Hợp tác với nhiều ngân hàng và công ty tài chính uy tín.</li>
+                        <li>Kỳ hạn linh hoạt: 3, 6, 9, 12 tháng.</li>
+                        <li>Thủ tục đơn giản, nhanh chóng.</li>
+                    </ul>
+                    <p class="text-xs text-gray-500 mt-2">* Áp dụng theo điều kiện của từng chương trình cụ thể.</p>
+                </div>
+            </section>
+        </div>
+        
+        <section id="uu-dai" class="mb-12">
+            <h2 class="section-title text-turquoise">6. Các Chương Trình Ưu Đãi</h2>
+            <p class="text-center mb-6 text-gray-700">Đừng bỏ lỡ hàng ngàn ưu đãi hấp dẫn được PNJ cập nhật thường xuyên!</p>
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="card">
+                     <div class="policy-point">
+                        <span class="icon-text text-coral-red">🎁</span>
+                        <div class="policy-point-text">
+                            <h4>Ưu Đãi Đa Dạng</h4>
+                            <p>Giảm giá trực tiếp, quà tặng kèm, ưu đãi đặc biệt cho các dịp lễ, sự kiện lớn và theo tháng.</p>
+                        </div>
+                    </div>
+                    <div class="policy-point">
+                        <span class="icon-text text-coral-red">💳</span>
+                        <div class="policy-point-text">
+                            <h4>Ưu Đãi Từ Đối Tác</h4>
+                            <p>Nhận thêm khuyến mãi khi thanh toán qua các đối tác liên kết như VNPAY, ví điện tử, thẻ ngân hàng.</p>
+                        </div>
+                    </div>
+                     <div class="policy-point">
+                        <span class="icon-text text-coral-red">🎉</span>
+                        <div class="policy-point-text">
+                            <h4>Sự Kiện Đặc Biệt</h4>
+                            <p>Các chương trình "Flash Sale", "Ngày Hội Thương Hiệu" với mức giảm giá sâu và quà tặng giá trị.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3 text-coral-red text-center">Phân Bố Loại Hình Khuyến Mãi (Ví dụ)</h3>
+                    <p class="text-sm text-gray-600 mb-2 text-center">PNJ mang đến nhiều hình thức ưu đãi để đáp ứng nhu cầu đa dạng của khách hàng.</p>
+                    <div class="chart-container">
+                        <canvas id="promoTypesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    function clearDisplay() {
-      display.value = '';
-    }
+    </main>
 
-    function calculateResult() {
-      try {
-        const result = eval(display.value);
-        display.value = result;
-      } catch {
-        display.value = 'Lỗi';
-      }
-    }
-  </script>
+    <footer class="bg-dark-teal text-white py-8 text-center">
+        <div class="container mx-auto px-4">
+            <p class="font-semibold text-xl mb-2">PNJ - Niềm Tin và Phong Cách</p>
+            <p class="mb-1">Để biết thêm thông tin chi tiết và cập nhật mới nhất về các chính sách,</p>
+            <p class="mb-3">vui lòng truy cập <a href="https://www.pnj.com.vn" target="_blank" class="text-turquoise hover:text-coral-red font-semibold">www.pnj.com.vn</a> hoặc liên hệ tổng đài:</p>
+            <p class="text-2xl font-bold text-coral-red">1800 54 54 57 (Miễn Phí)</p>
+            <p class="text-xs mt-4 text-gray-400">&copy; Bản quyền thuộc về PNJ. Infographic được tạo dựa trên thông tin công khai.</p>
+        </div>
+    </footer>
+
+    <script>
+        function wrapLabels(label, maxWidth) {
+            const words = label.split(' ');
+            let line = '';
+            const lines = [];
+            for (const word of words) {
+                if ((line + word).length > maxWidth) {
+                    lines.push(line.trim());
+                    line = '';
+                }
+                line += word + ' ';
+            }
+            lines.push(line.trim());
+            return lines;
+        }
+
+        const promoCtx = document.getElementById('promoTypesChart').getContext('2d');
+        const promoData = {
+            labels: ['Giảm Giá Trực Tiếp', 'Quà Tặng Kèm Theo Sản Phẩm', ['Ưu Đãi Từ Các', 'Đối Tác Thanh Toán'], ['Chương Trình Đặc Biệt', '(Lễ, Sự Kiện)']],
+            datasets: [{
+                label: 'Phân Bố Loại Hình Khuyến Mãi',
+                data: [40, 25, 20, 15],
+                backgroundColor: [
+                    '#FF6B6B', // Coral Red
+                    '#4ECDC4', // Turquoise
+                    '#45B7D1', // Sky Blue
+                    '#F9A825'  // Example Yellow for variety
+                ],
+                borderColor: '#F7FFF7', // Mint Cream for border
+                borderWidth: 2,
+                hoverOffset: 4
+            }]
+        };
+
+        const promoConfig = {
+            type: 'doughnut',
+            data: promoData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#1A535C', // Dark Teal
+                            font: {
+                                size: 12
+                            },
+                            padding: 15,
+                             generateLabels: function(chart) {
+                                const data = chart.data;
+                                if (data.labels.length && data.datasets.length) {
+                                    return data.labels.map(function(label, i) {
+                                        const meta = chart.getDatasetMeta(0);
+                                        const style = meta.controller.getStyle(i);
+                                        let textLabel = Array.isArray(label) ? label.join(' ') : label;
+                                        
+                                        const words = textLabel.split(' ');
+                                        let currentLine = '';
+                                        let wrappedText = [];
+                                        for (let k=0; k<words.length; k++) {
+                                            if (currentLine.length + words[k].length > 16) {
+                                                wrappedText.push(currentLine.trim());
+                                                currentLine = '';
+                                            }
+                                            currentLine += words[k] + ' ';
+                                        }
+                                        wrappedText.push(currentLine.trim());
+
+
+                                        return {
+                                            text: wrappedText, // Use the potentially wrapped label
+                                            fillStyle: style.backgroundColor,
+                                            strokeStyle: style.borderColor,
+                                            lineWidth: style.borderWidth,
+                                            hidden: isNaN(data.datasets[0].data[i]) || meta.data[i].hidden,
+                                            index: i
+                                        };
+                                    });
+                                }
+                                return [];
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                  return label.join(' ');
+                                } else {
+                                  return label;
+                                }
+                            },
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed + '%';
+                                }
+                                return label;
+                            }
+                        },
+                        backgroundColor: '#1A535C', // Dark Teal
+                        titleColor: '#FFFFFF',
+                        bodyColor: '#FFFFFF',
+                        borderColor: '#4ECDC4', // Turquoise
+                        borderWidth: 1
+                    }
+                },
+                cutout: '60%' 
+            }
+        };
+        new Chart(promoCtx, promoConfig);
+
+        // Process labels for Chart.js if they were not already arrays
+        promoData.labels = promoData.labels.map(label => {
+            if (typeof label === 'string' && label.length > 16) {
+                return wrapLabels(label, 16);
+            }
+            return label;
+        });
+        
+    </script>
 </body>
 </html>
