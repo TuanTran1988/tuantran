@@ -5,156 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bản Tin Hệ Thống Tuân Thủ</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8; /* Màu nền nhẹ nhàng */
+            background-color: #f0f4f8;
         }
-        .header-icon {
-            font-size: 2.5rem; /* Kích thước icon lớn hơn */
-            margin-right: 0.5rem;
-        }
-        .section-title {
-            font-size: 1.5rem; /* Cỡ chữ tiêu đề mục lớn hơn */
-            font-weight: 700;
-            color: #1e3a8a; /* Màu xanh đậm cho tiêu đề */
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-        }
-        .card {
-            background-color: white;
-            border-radius: 0.75rem; /* Bo góc nhiều hơn */
-            padding: 1.5rem; /* Tăng padding */
-            margin-bottom: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            border-left: 5px solid; /* Thêm viền trái để nhấn mạnh */
-        }
-        .card-warning {
-            border-left-color: #ef4444; /* Màu đỏ cho cảnh báo */
-        }
-        .card-compliance {
-            border-left-color: #3b82f6; /* Màu xanh dương cho tuân thủ */
-        }
-        .card-purpose {
-            border-left-color: #10b981; /* Màu xanh lá cho mục đích */
-        }
-        .list-item {
-            display: flex;
-            align-items: flex-start; /* Căn chỉnh item từ trên xuống */
-            margin-bottom: 1rem; /* Khoảng cách giữa các mục */
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            background-color: #f9fafb; /* Nền nhẹ cho từng mục */
-        }
-        .list-item-icon {
-            font-size: 1.5rem;
-            margin-right: 0.75rem;
-            flex-shrink: 0; /* Ngăn icon bị co lại */
-        }
-        .list-item-content strong {
-            color: #1e3a8a; /* Màu chữ đậm cho phần chính */
-        }
-        .list-item-content span {
-            color: #4b5563; /* Màu chữ nhạt hơn cho phần giải thích */
-        }
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
-            gap: 1.5rem; /* Khoảng cách giữa các grid items */
-        }
-        .benefit-item {
-            background-color: #e0f2fe; /* Nền xanh nhạt cho lợi ích */
-            padding: 1rem;
-            border-radius: 0.5rem;
-        }
-        .benefit-item strong {
-            color: #0c4a6e; /* Màu xanh đậm cho tiêu đề lợi ích */
-        }
-        .footer-lock {
-            font-size: 2rem;
-            color: #1e3a8a;
-        }
-        .highlight-red {
-            color: #ef4444; /* Màu đỏ cho chữ "KHÔNG" */
-            font-weight: bold;
-        }
-        .highlight-green {
-            color: #10b981; /* Màu xanh lá cho chữ "CÓ" */
-            font-weight: bold;
-        }
-        .print-button-container {
-            text-align: center;
-            margin-bottom: 2rem; /* Khoảng cách với nội dung bên dưới */
-        }
-        .print-button {
-            background-color: #1e3a8a; /* Màu nền nút */
-            color: white;
-            font-weight: bold;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-        }
-        .print-button:hover {
-            background-color: #1c3170; /* Màu nền nút khi hover */
-        }
-        .print-button svg {
-            margin-right: 0.5rem;
-        }
-        /* Styles for printing - ẩn nút in và các yếu tố không cần thiết */
+        .header-icon { font-size: 2.5rem; margin-right: 0.5rem; }
+        .section-title { font-size: 1.5rem; font-weight: 700; color: #1e3a8a; margin-bottom: 1rem; display: flex; align-items: center; }
+        .card { background-color: white; border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); border-left: 5px solid; }
+        .card-warning { border-left-color: #ef4444; }
+        .card-compliance { border-left-color: #3b82f6; }
+        .card-purpose { border-left-color: #10b981; }
+        .list-item { display: flex; align-items: flex-start; margin-bottom: 1rem; padding: 0.75rem; border-radius: 0.5rem; background-color: #f9fafb; }
+        .list-item-icon { font-size: 1.5rem; margin-right: 0.75rem; flex-shrink: 0; }
+        .list-item-content strong { color: #1e3a8a; }
+        .list-item-content span { color: #4b5563; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .footer-lock { font-size: 2rem; color: #1e3a8a; }
+        .highlight-red { color: #ef4444; font-weight: bold; }
+        .highlight-green { color: #10b981; font-weight: bold; }
+        .print-button-container { text-align: center; margin-bottom: 2rem; }
+        .print-button { background-color: #1e3a8a; color: white; font-weight: bold; padding: 0.75rem 1.5rem; border-radius: 0.5rem; cursor: pointer; transition: background-color 0.3s ease; border: none; display: inline-flex; align-items: center; }
+        .print-button:hover { background-color: #1c3170; }
+        .print-button svg { margin-right: 0.5rem; }
+
         @media print {
-            body {
-                background-color: white; /* Nền trắng khi in */
-            }
-            .print-button-container, .no-print {
-                display: none !important;
-            }
-            .card {
-                box-shadow: none;
-                border-left: none;
-                padding: 1rem 0; /* Giảm padding khi in */
-            }
-            header {
-                background: none;
-                color: black;
-                padding: 1rem 0;
-                box-shadow: none;
-            }
-            header h1, header p {
-                color: black !important;
-            }
-            .section-title {
-                color: black;
-            }
-             .list-item-content strong {
-                color: black;
-            }
-            .list-item-content span {
-                color: #333;
-            }
-            .grid-container .p-4 {
-                background-color: #f9fafb !important; /* Đảm bảo nền cho grid items khi in */
-                box-shadow: none;
-            }
-            .grid-container h3 {
-                color: black !important;
-            }
-            .grid-container ul li {
-                color: #333 !important;
-            }
-            .footer-lock {
-                color: black;
-            }
+            .print-button-container, .no-print { display: none !important; }
+            .card { box-shadow: none; border-left: none; padding: 1rem 0; }
+            header { background: none; color: black; padding: 1rem 0; box-shadow: none; }
+            .section-title, .list-item-content strong, .footer-lock { color: black; }
+            .list-item-content span, .grid-container ul li { color: #333 !important; }
         }
     </style>
 </head>
 <body class="p-4 md:p-8">
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-4xl mx-auto" id="infographic">
         <div class="print-button-container">
             <button onclick="window.print()" class="print-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-printer-fill" viewBox="0 0 16 16">
@@ -163,6 +50,15 @@
                     <path d="M0 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2.5a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0-.5.5V11H2a2 2 0 0 1-2-2V6zm2.5 7a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
                 </svg>
                 In PDF
+            </button>
+
+            <!-- Tải PDF -->
+            <button onclick="downloadPDF()" class="print-button ml-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                    <path d="M.5 9.9a.5.5 0 0 1 .5.1l4 3.9V1.5a.5.5 0 0 1 1 0v12.4l4-3.9a.5.5 0 1 1 .7.7l-5 4.8a.5.5 0 0 1-.7 0l-5-4.8a.5.5 0 0 1 .1-.7z"/>
+                    <path d="M0 15a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2H0z"/>
+                </svg>
+                Tải PDF
             </button>
         </div>
 
@@ -175,9 +71,7 @@
         </header>
 
         <section class="card card-warning">
-            <h2 class="section-title">
-                <span class="mr-2">⚠️</span> VẤN ĐỀ PHÁT HIỆN
-            </h2>
+            <h2 class="section-title">⚠️ VẤN ĐỀ PHÁT HIỆN</h2>
             <div class="p-4 bg-red-50 border border-red-200 rounded-md text-red-700">
                 <p class="text-lg flex items-center">
                     <span class="text-3xl mr-3">🚫</span> Bán hàng <strong class="mx-1">KHÔNG</strong> có hàng thực tế (bán khống) tại cửa hàng.
@@ -186,9 +80,7 @@
         </section>
 
         <section class="card card-compliance">
-            <h2 class="section-title">
-                <span class="mr-2">✅</span> YÊU CẦU TUÂN THỦ NGHIÊM NGẶT
-            </h2>
+            <h2 class="section-title">✅ YÊU CẦU TUÂN THỦ NGHIÊM NGẶT</h2>
             <div class="space-y-4">
                 <div class="list-item">
                     <span class="list-item-icon">1️⃣</span>
@@ -222,14 +114,10 @@
         </section>
 
         <section class="card card-purpose">
-            <h2 class="section-title">
-                <span class="mr-2">🔐</span> MỤC ĐÍCH & LỢI ÍCH
-            </h2>
+            <h2 class="section-title">🔐 MỤC ĐÍCH & LỢI ÍCH</h2>
             <div class="grid-container">
                 <div class="p-4 bg-blue-50 rounded-lg shadow">
-                    <h3 class="text-xl font-semibold text-blue-700 mb-3 flex items-center">
-                        <span class="text-2xl mr-2">📌</span> Mục đích
-                    </h3>
+                    <h3 class="text-xl font-semibold text-blue-700 mb-3 flex items-center">📌 Mục đích</h3>
                     <ul class="list-disc list-inside space-y-2 text-gray-700">
                         <li>Phòng ngừa rủi ro pháp lý.</li>
                         <li>Đảm bảo hệ thống vận hành chuẩn.</li>
@@ -237,9 +125,7 @@
                     </ul>
                 </div>
                 <div class="p-4 bg-green-50 rounded-lg shadow">
-                     <h3 class="text-xl font-semibold text-green-700 mb-3 flex items-center">
-                        <span class="text-2xl mr-2">🎯</span> Lợi ích mang lại
-                    </h3>
+                    <h3 class="text-xl font-semibold text-green-700 mb-3 flex items-center">🎯 Lợi ích mang lại</h3>
                     <ul class="list-disc list-inside space-y-2 text-gray-700">
                         <li>Tránh bị xử phạt hành chính / truy cứu trách nhiệm.</li>
                         <li>Dễ kiểm tra – kiểm soát – đối chiếu.</li>
@@ -250,14 +136,22 @@
         </section>
 
         <footer class="text-center mt-8 py-6 border-t border-gray-300">
-            <p class="text-gray-600 text-sm">
-                <span class="footer-lock">🔑</span> Hãy cùng nhau xây dựng một hệ thống minh bạch và tuân thủ!
-            </p>
+            <p class="text-gray-600 text-sm"><span class="footer-lock">🔑</span> Hãy cùng nhau xây dựng một hệ thống minh bạch và tuân thủ!</p>
         </footer>
     </div>
+
     <script>
-        // No additional JavaScript needed for window.print()
-        // The onclick="window.print()" attribute on the button handles the functionality.
+        function downloadPDF() {
+            const element = document.getElementById('infographic');
+            const opt = {
+                margin:       [10, 10, 10, 10],
+                filename:     'Ban_Tin_Tuan_Thu.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
     </script>
 </body>
 </html>
