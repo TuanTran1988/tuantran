@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bản Tin Hệ Thống Tuân Thủ</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="dist/tailwind.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8; /* Màu nền nhẹ nhàng */
+            background-color: #f0f4f8;
             color: #333;
         }
         .header-icon {
@@ -73,175 +73,134 @@
             color: #ef4444;
             font-weight: bold;
         }
-        .print-button-container {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        .print-button {
-            background-color: #1e3a8a;
-            color: white;
-            font-weight: bold;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-        }
-        .print-button:hover {
-            background-color: #1c3170;
-        }
-        .print-button svg {
-            margin-right: 0.5rem;
-        }
 
         /* A4 Print Styles */
         @media print {
             @page {
                 size: A4;
-                margin: 1cm; /* Consistent margin for A4 */
+                margin: 1cm;
             }
-
             body {
                 background-color: white !important;
-                font-size: 10pt; /* Base font size for print */
+                font-size: 9pt;
                 color: black !important;
-                width: 100%; /* Ensure body takes full printable width */
-                -webkit-print-color-adjust: exact !important; /* Force printing of background colors in Chrome/Safari */
-                print-color-adjust: exact !important; /* Standard property */
+                width: 100%;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
-
-            .print-button-container, .no-print {
-                display: none !important;
-            }
-
-            .mx-auto { /* Main container for print */
+            .mx-auto {
                 width: 100% !important;
                 padding: 0 !important;
                 margin: 0 !important;
             }
-
             header {
-                background: #1e3a8a !important; /* Solid background for header */
+                background: #1e3a8a !important;
                 color: white !important;
-                padding: 0.75rem !important; /* Reduced padding */
-                margin-bottom: 0.75rem !important;
-                border-radius: 0.5rem !important; /* Slight rounding for print */
+                padding: 0.5rem !important;
+                margin-bottom: 0.5rem !important;
+                border-radius: 0.5rem !important;
                 text-align: center;
             }
             header h1 {
-                font-size: 16pt !important; /* Adjusted font size */
+                font-size: 14pt !important;
                 color: white !important;
             }
             header p {
-                font-size: 9pt !important;
-                margin-top: 0.25rem !important;
+                font-size: 8pt !important;
+                margin-top: 0.2rem !important;
                 color: white !important;
             }
             .header-icon {
-                font-size: 1.8rem !important; /* Slightly smaller icon */
+                font-size: 1.5rem !important;
             }
-
             .card {
                 box-shadow: none !important;
-                border-left: 3px solid !important; /* Thinner border */
-                padding: 0.75rem !important;
-                margin-bottom: 0.75rem !important;
-                background-color: white !important; /* Ensure card background is white */
-                page-break-inside: avoid; /* Try to keep card content on one page */
-            }
-
-            .section-title {
-                font-size: 12pt !important; /* Adjusted font size */
-                color: #1e3a8a !important;
+                border-left: 3px solid !important;
+                padding: 0.5rem !important;
                 margin-bottom: 0.5rem !important;
+                background-color: white !important;
+                page-break-inside: avoid;
             }
-             .section-title span.mr-2 {
-                font-size: 1.2em; /* Make icon slightly larger relative to title */
+            .section-title {
+                font-size: 10pt !important;
+                color: #1e3a8a !important;
+                margin-bottom: 0.3rem !important;
             }
-
-
+            .section-title span.mr-2 {
+                font-size: 1.1em !important;
+            }
             .card-warning .p-4 {
-                background-color: #fee2e2 !important; /* Lighter red for print */
+                background-color: #fee2e2 !important;
                 border: 1px solid #fecaca !important;
                 color: #b91c1c !important;
-                padding: 0.5rem !important;
+                padding: 0.3rem !important;
             }
             .card-warning .p-4 p {
-                 font-size: 10pt !important;
+                font-size: 9pt !important;
             }
             .card-warning .p-4 .text-3xl {
-                font-size: 1.5rem !important; /* Smaller icon in warning */
+                font-size: 1.2rem !important;
             }
-
-
             .list-item {
-                padding: 0.4rem !important;
-                margin-bottom: 0.4rem !important;
-                background-color: #f8f9fa !important; /* Very light gray for list items */
-                 border: 1px solid #e9ecef;
+                padding: 0.3rem !important;
+                margin-bottom: 0.3rem !important;
+                background-color: #f8f9fa !important;
+                border: 1px solid #e9ecef;
             }
             .list-item-icon {
-                font-size: 1.2rem !important; /* Smaller list icons */
-                margin-right: 0.5rem !important;
+                font-size: 1rem !important;
+                margin-right: 0.4rem !important;
             }
             .list-item-content strong {
                 color: #1e3a8a !important;
-                font-size: 10pt !important;
+                font-size: 9pt !important;
             }
             .list-item-content span {
                 color: #495057 !important;
-                font-size: 8pt !important;
+                font-size: 7pt !important;
             }
-
             .grid-container {
-                grid-template-columns: 1fr 1fr !important; /* Force two columns for A4 */
-                gap: 0.75rem !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 0.5rem !important;
             }
-            .grid-container > div { /* Each item in the grid */
-                padding: 0.75rem !important;
-                border-radius: 0.375rem !important; /* Slightly smaller radius */
+            .grid-container > div {
+                padding: 0.5rem !important;
+                border-radius: 0.25rem !important;
                 page-break-inside: avoid;
             }
             .grid-container .bg-blue-50 {
-                 background-color: #e7f5ff !important; /* Lighter blue */
+                background-color: #e7f5ff !important;
             }
             .grid-container .bg-green-50 {
-                 background-color: #e6fcf5 !important; /* Lighter green */
+                background-color: #e6fcf5 !important;
             }
-
             .grid-container h3 {
-                font-size: 11pt !important;
-                margin-bottom: 0.3rem !important;
+                font-size: 10pt !important;
+                margin-bottom: 0.2rem !important;
             }
-             .grid-container h3 .text-2xl {
-                font-size: 1.3rem !important;
+            .grid-container h3 .text-2xl {
+                font-size: 1.1rem !important;
             }
             .grid-container ul {
-                font-size: 9pt !important;
-                padding-left: 1rem !important; /* Indent list */
+                font-size: 8pt !important;
+                padding-left: 0.8rem !important;
             }
-             .grid-container ul li {
-                margin-bottom: 0.2rem;
-             }
-
-
+            .grid-container ul li {
+                margin-bottom: 0.1rem !important;
+            }
             .footer-lock {
-                font-size: 1.5rem !important;
+                font-size: 1.2rem !important;
                 color: #1e3a8a !important;
             }
             footer p {
-                font-size: 8pt !important;
+                font-size: 7pt !important;
                 color: #333 !important;
             }
             footer {
-                margin-top: 1rem !important;
-                padding-top: 0.5rem !important;
+                margin-top: 0.5rem !important;
+                padding-top: 0.3rem !important;
                 border-top: 1px solid #ccc !important;
             }
-
-            /* Ensure colors are printed */
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
@@ -251,17 +210,6 @@
 </head>
 <body class="p-4 md:p-8">
     <div class="mx-auto">
-        <div class="print-button-container">
-            <button onclick="window.print()" class="print-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-printer-fill" viewBox="0 0 16 16">
-                    <path d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2H5zm5.5 3H5.5a.5.5 0 0 0-.5.5V8a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5V4.5a.5.5 0 0 0-.5-.5z"/>
-                    <path d="M3 7.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
-                    <path d="M0 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2.5a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0-.5.5V11H2a2 2 0 0 1-2-2V6zm2.5 7a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
-                </svg>
-                In PDF
-            </button>
-        </div>
-
         <header class="text-center mb-8 p-6 bg-gradient-to-r from-blue-700 to-blue-500 text-white rounded-lg shadow-lg">
             <h1 class="text-3xl md:text-4xl font-bold flex items-center justify-center">
                 <span class="header-icon">🔒</span> BẢN TIN HỆ THỐNG TUÂN THỦ
@@ -325,7 +273,7 @@
                 <span class="mr-2">🔐</span> MỤC ĐÍCH & LỢI ÍCH
             </h2>
             <div class="grid-container">
-                 <div class="p-4 bg-blue-50 rounded-lg shadow">
+                <div class="p-4 bg-blue-50 rounded-lg shadow">
                     <h3 class="text-xl font-semibold text-blue-700 mb-3 flex items-center">
                         <span class="text-2xl mr-2">📌</span> Mục đích
                     </h3>
@@ -336,7 +284,7 @@
                     </ul>
                 </div>
                 <div class="p-4 bg-green-50 rounded-lg shadow">
-                     <h3 class="text-xl font-semibold text-green-700 mb-3 flex items-center">
+                    <h3 class="text-xl font-semibold text-green-700 mb-3 flex items-center">
                         <span class="text-2xl mr-2">🎯</span> Lợi ích mang lại
                     </h3>
                     <ul class="list-disc list-inside space-y-2 text-gray-700">
@@ -354,9 +302,5 @@
             </p>
         </footer>
     </div>
-    <script>
-        // No additional JavaScript needed for window.print()
-        // The onclick="window.print()" attribute on the button handles the functionality.
-    </script>
 </body>
 </html>
