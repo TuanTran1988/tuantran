@@ -3,304 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bản Tin Hệ Thống Tuân Thủ</title>
-    <link href="dist/tailwind.css" rel="stylesheet">
+    <title>Infographic Tương Tác: Hướng Dẫn SAP T-Codes với Gemini AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f0f4f8;
-            color: #333;
         }
-        .header-icon {
-            font-size: 2.5rem;
-            margin-right: 0.5rem;
+        .tab-content {
+            display: none;
+            transition: opacity 0.5s ease-in-out;
+            opacity: 0;
         }
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #1e3a8a;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
+        .tab-content.active {
+            display: block;
+            opacity: 1;
         }
-        .card {
-            background-color: white;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            border-left: 5px solid;
+        .tab-btn {
+            transition: all 0.3s ease;
         }
-        .card-warning {
-            border-left-color: #ef4444;
+        .tab-btn.active {
+            background-color: #3b82f6;
+            color: white;
+            box-shadow: 0 4px 14px 0 rgba(0, 118, 255, 0.39);
         }
-        .card-compliance {
-            border-left-color: #3b82f6;
+        .step-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .card-purpose {
-            border-left-color: #10b981;
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
-        .list-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            background-color: #f9fafb;
+        .icon-bg {
+            background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
         }
-        .list-item-icon {
-            font-size: 1.5rem;
-            margin-right: 0.75rem;
-            flex-shrink: 0;
+        .icon-bg-green {
+             background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
         }
-        .list-item-content strong {
-            color: #1e3a8a;
+        .icon-bg-purple {
+             background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
         }
-        .list-item-content span {
-            color: #4b5563;
+        .gemini-btn {
+            background: linear-gradient(to right, #6366f1, #8b5cf6);
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
+        .gemini-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(0, 0, 0, 0.1);
         }
-        .footer-lock {
-            font-size: 2rem;
-            color: #1e3a8a;
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #6366f1;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 1rem auto;
         }
-        .highlight-red {
-            color: #ef4444;
-            font-weight: bold;
-        }
-
-        /* A4 Print Styles */
-        @media print {
-            @page {
-                size: A4;
-                margin: 1cm;
-            }
-            body {
-                background-color: white !important;
-                font-size: 9pt;
-                color: black !important;
-                width: 100%;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            .mx-auto {
-                width: 100% !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-            header {
-                background: #1e3a8a !important;
-                color: white !important;
-                padding: 0.5rem !important;
-                margin-bottom: 0.5rem !important;
-                border-radius: 0.5rem !important;
-                text-align: center;
-            }
-            header h1 {
-                font-size: 14pt !important;
-                color: white !important;
-            }
-            header p {
-                font-size: 8pt !important;
-                margin-top: 0.2rem !important;
-                color: white !important;
-            }
-            .header-icon {
-                font-size: 1.5rem !important;
-            }
-            .card {
-                box-shadow: none !important;
-                border-left: 3px solid !important;
-                padding: 0.5rem !important;
-                margin-bottom: 0.5rem !important;
-                background-color: white !important;
-                page-break-inside: avoid;
-            }
-            .section-title {
-                font-size: 10pt !important;
-                color: #1e3a8a !important;
-                margin-bottom: 0.3rem !important;
-            }
-            .section-title span.mr-2 {
-                font-size: 1.1em !important;
-            }
-            .card-warning .p-4 {
-                background-color: #fee2e2 !important;
-                border: 1px solid #fecaca !important;
-                color: #b91c1c !important;
-                padding: 0.3rem !important;
-            }
-            .card-warning .p-4 p {
-                font-size: 9pt !important;
-            }
-            .card-warning .p-4 .text-3xl {
-                font-size: 1.2rem !important;
-            }
-            .list-item {
-                padding: 0.3rem !important;
-                margin-bottom: 0.3rem !important;
-                background-color: #f8f9fa !important;
-                border: 1px solid #e9ecef;
-            }
-            .list-item-icon {
-                font-size: 1rem !important;
-                margin-right: 0.4rem !important;
-            }
-            .list-item-content strong {
-                color: #1e3a8a !important;
-                font-size: 9pt !important;
-            }
-            .list-item-content span {
-                color: #495057 !important;
-                font-size: 7pt !important;
-            }
-            .grid-container {
-                grid-template-columns: 1fr 1fr !important;
-                gap: 0.5rem !important;
-            }
-            .grid-container > div {
-                padding: 0.5rem !important;
-                border-radius: 0.25rem !important;
-                page-break-inside: avoid;
-            }
-            .grid-container .bg-blue-50 {
-                background-color: #e7f5ff !important;
-            }
-            .grid-container .bg-green-50 {
-                background-color: #e6fcf5 !important;
-            }
-            .grid-container h3 {
-                font-size: 10pt !important;
-                margin-bottom: 0.2rem !important;
-            }
-            .grid-container h3 .text-2xl {
-                font-size: 1.1rem !important;
-            }
-            .grid-container ul {
-                font-size: 8pt !important;
-                padding-left: 0.8rem !important;
-            }
-            .grid-container ul li {
-                margin-bottom: 0.1rem !important;
-            }
-            .footer-lock {
-                font-size: 1.2rem !important;
-                color: #1e3a8a !important;
-            }
-            footer p {
-                font-size: 7pt !important;
-                color: #333 !important;
-            }
-            footer {
-                margin-top: 0.5rem !important;
-                padding-top: 0.3rem !important;
-                border-top: 1px solid #ccc !important;
-            }
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body class="p-4 md:p-8">
-    <div class="mx-auto">
-        <header class="text-center mb-8 p-6 bg-gradient-to-r from-blue-700 to-blue-500 text-white rounded-lg shadow-lg">
-            <h1 class="text-3xl md:text-4xl font-bold flex items-center justify-center">
-                <span class="header-icon">🔒</span> BẢN TIN HỆ THỐNG TUÂN THỦ
-            </h1>
-            <p class="text-lg md:text-xl mt-2">LƯU Ý QUAN TRỌNG</p>
-            <p class="text-sm md:text-base mt-1">(Phòng ngừa rủi ro pháp lý – Thực hiện đúng quy trình xuất nhập hàng)</p>
+<body class="antialiased text-slate-800">
+    <div class="container mx-auto px-4 py-8 md:py-12">
+        
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-900">Hướng Dẫn Bù Trừ Công Nợ trong SAP</h1>
+            <p class="mt-2 text-lg text-slate-600">Infographic tương tác với Trợ lý AI Gemini ✨</p>
         </header>
 
-        <section class="card card-warning">
-            <h2 class="section-title">
-                <span class="mr-2">⚠️</span> VẤN ĐỀ PHÁT HIỆN
-            </h2>
-            <div class="p-4 bg-red-50 border border-red-200 rounded-md text-red-700 space-y-2">
-                <p class="text-lg flex items-center">
-                    <span class="text-3xl mr-3">🚫</span> Bán hàng <strong class="mx-1">KHÔNG</strong> có hàng thực tế (bán khống) tại cửa hàng.
-                </p>
-                <p class="text-lg flex items-center">
-                    <span class="text-3xl mr-3">🚫</span> Giao dịch xuất - nhập hàng hóa <strong class="mx-1">KHÔNG</strong> có hàng thực tế và <strong class="mx-1">KHÔNG</strong> phát sinh giao nhận hàng hóa.
-                </p>
-            </div>
-        </section>
+        <!-- Comparison Table -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-10 overflow-x-auto">
+            <h2 class="text-2xl font-bold text-slate-800 mb-4 text-center">Bảng So Sánh Nhanh 3 T-Code</h2>
+            <table class="w-full min-w-[700px] text-left border-collapse">
+                <thead class="bg-slate-50">
+                    <tr>
+                        <th class="py-3 px-4 font-semibold text-slate-600 rounded-tl-lg">T-code</th>
+                        <th class="py-3 px-4 font-semibold text-slate-600">Tên gọi</th>
+                        <th class="py-3 px-4 font-semibold text-slate-600">Khi nào dùng?</th>
+                        <th class="py-3 px-4 font-semibold text-slate-600">Diễn giải dễ hiểu</th>
+                        <th class="py-3 px-4 font-semibold text-slate-600 rounded-tr-lg">Kết quả sau thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-slate-200">
+                        <td class="py-3 px-4"><span class="font-bold text-blue-600 bg-blue-100 py-1 px-3 rounded-full">F-32</span></td>
+                        <td class="py-3 px-4">Đối trừ công nợ khách hàng</td>
+                        <td class="py-3 px-4">Khi khách hàng đã trả tiền hoặc có bù trừ</td>
+                        <td class="py-3 px-4">Dùng để gạch nợ, nối phiếu thu và hóa đơn bán hàng lại với nhau</td>
+                        <td class="py-3 px-4">Công nợ KH được ghi nhận đã thanh toán</td>
+                    </tr>
+                    <tr class="border-b border-slate-200">
+                        <td class="py-3 px-4"><span class="font-bold text-green-600 bg-green-100 py-1 px-3 rounded-full">F-44</span></td>
+                        <td class="py-3 px-4">Đối trừ công nợ nhà cung cấp</td>
+                        <td class="py-3 px-4">Khi cửa hàng đã thanh toán cho NCC</td>
+                        <td class="py-3 px-4">Dùng để gạch nợ, nối phiếu chi và hóa đơn mua hàng lại với nhau</td>
+                        <td class="py-3 px-4">Công nợ NCC được ghi nhận đã thanh toán</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4"><span class="font-bold text-purple-600 bg-purple-100 py-1 px-3 rounded-full">F-03</span></td>
+                        <td class="py-3 px-4">Đối trừ nội bộ</td>
+                        <td class="py-3 px-4">Khi cần gạch nợ các tài khoản tạm ứng, hoàn ứng, clearing...</td>
+                        <td class="py-3 px-4">Dùng để đối trừ các khoản không phải KH/NCC (ví dụ: ứng tiền, hạch toán nội bộ...)</td>
+                        <td class="py-3 px-4">Các bút toán clearing được hạch toán hợp lệ</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-        <section class="card card-compliance">
-            <h2 class="section-title">
-                <span class="mr-2">✅</span> YÊU CẦU TUÂN THỦ NGHIÊM NGẶT
-            </h2>
-            <div class="space-y-4">
-                <div class="list-item">
-                    <span class="list-item-icon">1️⃣</span>
-                    <div class="list-item-content">
-                        <strong>Chỉ thực hiện xuất - nhập - bán khi có hàng hóa thực tế đầy đủ.</strong><br>
-                        <span>🎯 Mục tiêu: Tránh sai lệch tồn kho, đúng pháp lý.</span>
+        <!-- Tab buttons -->
+        <div id="tabs" class="flex flex-wrap justify-center gap-2 md:gap-4 mb-8">
+            <button data-target="f-32" class="tab-btn active text-sm md:text-base font-semibold py-3 px-6 rounded-full bg-white shadow-md">
+                <span class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-check-fill mr-2" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/><path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+                    F-32 (Khách Hàng)
+                </span>
+            </button>
+            <button data-target="f-44" class="tab-btn text-sm md:text-base font-semibold py-3 px-6 rounded-full bg-white shadow-md">
+                 <span class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-truck mr-2" viewBox="0 0 16 16"><path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-4 0H1.5A1.5 1.5 0 0 1 0 10.5v-7zM12 5V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5V5h10zm-6 8a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+                    F-44 (Nhà Cung Cấp)
+                 </span>
+            </button>
+            <button data-target="f-03" class="tab-btn text-sm md:text-base font-semibold py-3 px-6 rounded-full bg-white shadow-md">
+                 <span class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-journal-check mr-2" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M10.854 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"/><path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/><path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/></svg>
+                     F-03 (Tài Khoản T/H)
+                 </span>
+            </button>
+        </div>
+
+        <!-- Tab content -->
+        <div id="tab-contents">
+            <!-- F-32 Content -->
+            <div id="f-32" class="tab-content active">
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                    <h2 class="text-2xl font-bold text-blue-600 mb-1">F-32: Bù trừ Công nợ Khách Hàng</h2>
+                    <p class="text-slate-500 mb-6">Sử dụng để đối trừ các hóa đơn và các khoản thanh toán của khách hàng.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 text-center">
+                        <div class="step-card bg-slate-50 rounded-xl p-4"><div class="icon-bg w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-3"><span class="text-2xl font-bold text-blue-600">1</span></div><h3 class="font-semibold">Truy cập T-Code</h3><p class="text-sm text-slate-500">Mở F-32</p></div>
+                        <div class="step-card bg-slate-50 rounded-xl p-4"><div class="icon-bg w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-3"><span class="text-2xl font-bold text-blue-600">2</span></div><h3 class="font-semibold">Nhập thông tin</h3><p class="text-sm text-slate-500">Nhập mã KH, mã công ty, ngày bù trừ.</p></div>
+                        <div class="step-card bg-slate-50 rounded-xl p-4"><div class="icon-bg w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-3"><span class="text-2xl font-bold text-blue-600">3</span></div><h3 class="font-semibold">Xử lý mục mở</h3><p class="text-sm text-slate-500">Nhấn "Process open items".</p></div>
+                        <div class="step-card bg-slate-50 rounded-xl p-4"><div class="icon-bg w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-3"><span class="text-2xl font-bold text-blue-600">4</span></div><h3 class="font-semibold">Chọn khoản mục</h3><p class="text-sm text-slate-500">Chọn hóa đơn và thanh toán. Đảm bảo "Not Assigned" = 0.</p></div>
+                        <div class="step-card bg-slate-50 rounded-xl p-4"><div class="icon-bg w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-3"><span class="text-2xl font-bold text-blue-600">5</span></div><h3 class="font-semibold">Lưu & Hoàn tất</h3><p class="text-sm text-slate-500">Nhấn Lưu để tạo chứng từ bù trừ.</p></div>
                     </div>
-                </div>
-                <div class="list-item">
-                    <span class="list-item-icon">2️⃣</span>
-                    <div class="list-item-content">
-                        <strong>Tuân thủ đúng quy trình giao – nhận trên hệ thống TMS.</strong><br>
-                        <span>🎯 Mục tiêu: Đảm bảo minh bạch & theo dõi được dữ liệu.</span>
-                    </div>
-                </div>
-                <div class="list-item">
-                    <span class="list-item-icon">3️⃣</span>
-                    <div class="list-item-content">
-                        <strong>Giao nhận hàng hóa cần có phát sinh thực tế, đối chiếu đầy đủ với phiếu hệ thống.</strong><br>
-                        <span>🎯 Mục tiêu: Đảm bảo tính xác thực, tránh rủi ro pháp lý.</span>
-                    </div>
-                </div>
-                <div class="list-item">
-                    <span class="list-item-icon">4️⃣</span>
-                    <div class="list-item-content">
-                        <strong>Tuyệt đối <span class="highlight-red">KHÔNG</span> tạo đơn hàng "ảo" để ghi nhận doanh thu.</strong><br>
-                        <span>🎯 Mục tiêu: Tuân thủ chuẩn mực kế toán & kiểm toán.</span>
-                    </div>
+                     <!-- Gemini Feature Section -->
+                    <div class="mt-8 pt-6 border-t border-slate-200"><h3 class="text-xl font-bold text-slate-800 mb-3 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-purple-500"><path d="M12 3V.5m5.66 5.66.34-.34m3.5 6.18h2.5m-15 0H.5m14.66 8.34-.34.34M9.5 3.5l.34-.34M6.34 9.16l-.34.34m12 0 .34.34m-4.5-4.5.34.34m-7.5 7.5L8 16m8-8 1-1m-4.5 4.5L12 12m-4 4 1-1m-1-4 1-1m4-1 1-1m-7.5 7.5-1 1m9-1 1-1"/><path d="M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18Z"/></svg>Ví dụ Tình huống từ AI</h3><p class="text-slate-500 mb-4">Nhấn nút bên dưới để Gemini tạo một ví dụ thực tế về cách sử dụng T-Code này.</p><button id="generate-f32" class="gemini-btn font-semibold py-2 px-5 rounded-lg inline-flex items-center">Tạo ví dụ tình huống ✨</button><div id="loader-f32" class="loader hidden"></div><div id="scenario-f32" class="mt-4 p-4 bg-slate-50 rounded-lg min-h-[100px] text-slate-700 leading-relaxed"><p class="text-slate-400 italic">Hãy tạo một ví dụ để xem sức mạnh của AI!</p></div></div>
                 </div>
             </div>
-        </section>
 
-        <section class="card card-purpose">
-            <h2 class="section-title">
-                <span class="mr-2">🔐</span> MỤC ĐÍCH & LỢI ÍCH
-            </h2>
-            <div class="grid-container">
-                <div class="p-4 bg-blue-50 rounded-lg shadow">
-                    <h3 class="text-xl font-semibold text-blue-700 mb-3 flex items-center">
-                        <span class="text-2xl mr-2">📌</span> Mục đích
-                    </h3>
-                    <ul class="list-disc list-inside space-y-2 text-gray-700">
-                        <li>Phòng ngừa rủi ro pháp lý.</li>
-                        <li>Đảm bảo hệ thống vận hành chuẩn.</li>
-                        <li>Ghi nhận doanh thu đúng và hợp lệ.</li>
-                    </ul>
-                </div>
-                <div class="p-4 bg-green-50 rounded-lg shadow">
-                    <h3 class="text-xl font-semibold text-green-700 mb-3 flex items-center">
-                        <span class="text-2xl mr-2">🎯</span> Lợi ích mang lại
-                    </h3>
-                    <ul class="list-disc list-inside space-y-2 text-gray-700">
-                        <li>Tránh bị xử phạt hành chính / truy cứu trách nhiệm.</li>
-                        <li>Dễ kiểm tra – kiểm soát – đối chiếu.</li>
-                        <li>Bảo vệ uy tín và minh bạch tài chính.</li>
-                    </ul>
+            <!-- F-44 Content -->
+            <div id="f-44" class="tab-content">
+                 <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                    <h2 class="text-2xl font-bold text-green-600 mb-1">F-44: Bù trừ Công nợ Nhà Cung Cấp</h2>
+                    <p class="text-slate-500 mb-6">Dùng để bù trừ các hóa đơn phải trả và các khoản đã thanh toán cho nhà cung cấp.</p>
+                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 text-center">
+                        <div class="step-card bg-slate-50 rounded-xl p-4"><div class="icon-bg-green w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-3"><span class="text-2xl font-bold text-green-600">1</span></div><h3 class="font-semibold">Truy cập T-Code</h3><p class="text-sm text-slate-500">Mở F-44</p></div>
+                        <div class="step-card bg-slate-50 rounded-xl p-4"><div class="icon-bg-green w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-3"><span class="text-2xl font-bold text-green-600">2</span></div><h3 class="font-semibold">Nhập thông tin</h3><p class="text-sm text-slate-500">Nhập mã NCC, mã công ty, ngày bù trừ.</p></div>
+                        <div class="step-card bg-slate-50 rounded-xl p-4"><div class="icon-bg-green w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-3"><span class="text-2xl font-bold text-green-600">3</span></div><h3 class="font-semibold">Xử lý mục mở</h3><p class="text-sm text-slate-500">Nhấn "Process open items".</p></div>
+                        <div class="step-card bg-slate-50 rounded-xl p-4"><div class="icon-bg-green w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-3"><span class="text-2xl font-bold text-green-600">4</span></div><h3 class="font-semibold">Chọn khoản mục</h3><p class="text-sm text-slate-500">Chọn hóa đơn và thanh toán. Đảm bảo "Not Assigned" = 0.</p></div>
+                        <div class="step-card bg-slate-50 rounded-xl p-4"><div class="icon-bg-green w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-3"><span class="text-2xl font-bold text-green-600">5</span></div><h3 class="font-semibold">Lưu & Hoàn tất</h3><p class="text-sm text-slate-500">Nhấn Lưu để hoàn tất bù trừ.</p></div>
+                    </div>
+                     <!-- Gemini Feature Section -->
+                    <div class="mt-8 pt-6 border-t border-slate-200"><h3 class="text-xl font-bold text-slate-800 mb-3 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-purple-500"><path d="M12 3V.5m5.66 5.66.34-.34m3.5 6.18h2.5m-15 0H.5m14.66 8.34-.34.34M9.5 3.5l.34-.34M6.34 9.16l-.34.34m12 0 .34.34m-4.5-4.5.34.34m-7.5 7.5L8 16m8-8 1-1m-4.5 4.5L12 12m-4 4 1-1m-1-4 1-1m4-1 1-1m-7.5 7.5-1 1m9-1 1-1"/><path d="M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18Z"/></svg>Ví dụ Tình huống từ AI</h3><p class="text-slate-500 mb-4">Nhấn nút bên dưới để Gemini tạo một ví dụ thực tế về cách sử dụng T-Code này.</p><button id="generate-f44" class="gemini-btn font-semibold py-2 px-5 rounded-lg inline-flex items-center">Tạo ví dụ tình huống ✨</button><div id="loader-f44" class="loader hidden"></div><div id="scenario-f44" class="mt-4 p-4 bg-slate-50 rounded-lg min-h-[100px] text-slate-700 leading-relaxed"><p class="text-slate-400 italic">Hãy tạo một ví dụ để xem sức mạnh của AI!</p></div></div>
                 </div>
             </div>
-        </section>
 
-        <footer class="text-center mt-8 py-6 border-t border-gray-300">
-            <p class="text-gray-600 text-sm">
-                <span class="footer-lock">🔑</span> Hãy cùng nhau xây dựng một hệ thống minh bạch và tuân thủ!
-            </p>
-        </footer>
+            <!-- F-03 Content -->
+            <div id="f-03" class="tab-content">
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                    <h2 class="text-2xl font-bold text-purple-600 mb-1">F-03: Bù trừ Tài Khoản Tổng Hợp (G/L)</h2>
+                    <p class="text-slate-500 mb-6">Áp dụng cho các tài khoản trung gian, tài khoản tạm để dọn dẹp các mục mở.</p>
+                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 text-center">
+                        <div class="step-card bg-slate-50 rounded-xl p-4"><div class="icon-bg-purple w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-3"><span class="text-2xl font-bold text-purple-600">1</span></div><h3 class="font-semibold">Truy cập T-Code</h3><p class="text-sm text-slate-500">Mở F-03</p></div>
+                        <div class="step-card bg-slate-50 rounded-xl p-4"><div class="icon-bg-purple w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-3"><span class="text-2xl font-bold text-purple-600">2</span></div><h3 class="font-semibold">Nhập tài khoản</h3><p class="text-sm text-slate-500">Nhập số hiệu TK Tổng hợp, mã công ty.</p></div>
+                        <div class="step-card bg-slate-50 rounded-xl p-4"><div class="icon-bg-purple w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-3"><span class="text-2xl font-bold text-purple-600">3</span></div><h3 class="font-semibold">Xử lý mục mở</h3><p class="text-sm text-slate-500">Nhấn "Process open items".</p></div>
+                        <div class="step-card bg-slate-50 rounded-xl p-4"><div class="icon-bg-purple w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-3"><span class="text-2xl font-bold text-purple-600">4</span></div><h3 class="font-semibold">Chọn Nợ/Có</h3><p class="text-sm text-slate-500">Chọn các dòng Nợ và Có đối ứng. Đảm bảo tổng = 0.</p></div>
+                        <div class="step-card bg-slate-50 rounded-xl p-4"><div class="icon-bg-purple w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-3"><span class="text-2xl font-bold text-purple-600">5</span></div><h3 class="font-semibold">Lưu & Hoàn tất</h3><p class="text-sm text-slate-500">Simulate và Lưu để bù trừ tài khoản.</p></div>
+                    </div>
+                     <!-- Gemini Feature Section -->
+                    <div class="mt-8 pt-6 border-t border-slate-200"><h3 class="text-xl font-bold text-slate-800 mb-3 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-purple-500"><path d="M12 3V.5m5.66 5.66.34-.34m3.5 6.18h2.5m-15 0H.5m14.66 8.34-.34.34M9.5 3.5l.34-.34M6.34 9.16l-.34.34m12 0 .34.34m-4.5-4.5.34.34m-7.5 7.5L8 16m8-8 1-1m-4.5 4.5L12 12m-4 4 1-1m-1-4 1-1m4-1 1-1m-7.5 7.5-1 1m9-1 1-1"/><path d="M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18Z"/></svg>Ví dụ Tình huống từ AI</h3><p class="text-slate-500 mb-4">Nhấn nút bên dưới để Gemini tạo một ví dụ thực tế về cách sử dụng T-Code này.</p><button id="generate-f03" class="gemini-btn font-semibold py-2 px-5 rounded-lg inline-flex items-center">Tạo ví dụ tình huống ✨</button><div id="loader-f03" class="loader hidden"></div><div id="scenario-f03" class="mt-4 p-4 bg-slate-50 rounded-lg min-h-[100px] text-slate-700 leading-relaxed"><p class="text-slate-400 italic">Hãy tạo một ví dụ để xem sức mạnh của AI!</p></div></div>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+    <script>
+        // --- Tab Navigation Logic ---
+        const tabs = document.getElementById('tabs');
+        const tabContents = document.getElementById('tab-contents');
+
+        tabs.addEventListener('click', (e) => {
+            const tabBtn = e.target.closest('.tab-btn');
+            if (!tabBtn) return;
+
+            tabs.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            tabContents.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            tabBtn.classList.add('active');
+            const targetId = tabBtn.dataset.target;
+            const targetContent = document.getElementById(targetId);
+            if(targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+
+        // --- Gemini API Integration ---
+        /**
+         * Fetches content from the Gemini API.
+         * @param {string} prompt - The prompt to send to the API.
+         * @param {string} loaderId - The ID of the loader element.
+         * @param {string} containerId - The ID of the container to display the result.
+         */
+        async function generateContent(prompt, loaderId, containerId) {
+            const loader = document.getElementById(loaderId);
+            const container = document.getElementById(containerId);
+
+            loader.classList.remove('hidden');
+            container.innerHTML = '';
+
+            try {
+                // The API Key is an empty string and will be handled by the execution environment.
+                const apiKey = ""; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const payload = {
+                    contents: [{
+                        role: "user",
+                        parts: [{ text: prompt }]
+                    }]
+                };
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API call failed with status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 && result.candidates[0].content.parts.length > 0) {
+                    // Using innerText to prevent HTML injection from the response.
+                    container.innerText = result.candidates[0].content.parts[0].text;
+                } else {
+                   throw new Error("API response was empty or malformed.");
+                }
+
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                container.innerHTML = `<p class="text-red-500">Đã xảy ra lỗi khi tạo ví dụ. Vui lòng kiểm tra lại và thử lại sau.</p>`;
+            } finally {
+                loader.classList.add('hidden');
+            }
+        }
+        
+        // --- Event Listeners for Gemini Buttons ---
+        document.getElementById('generate-f32').addEventListener('click', () => {
+            const prompt = "Hãy tạo một kịch bản kinh doanh ngắn gọn, thực tế bằng tiếng Việt cho một kế toán viên cần sử dụng SAP T-code F-32 để bù trừ tài khoản của khách hàng. Kịch bản nên bao gồm một khách hàng cụ thể, số tiền hóa đơn và số tiền thanh toán cần được bù trừ. Định dạng đầu ra dưới dạng một đoạn văn đơn giản.";
+            generateContent(prompt, 'loader-f32', 'scenario-f32');
+        });
+
+        document.getElementById('generate-f44').addEventListener('click', () => {
+            const prompt = "Hãy tạo một kịch bản kinh doanh ngắn gọn, thực tế bằng tiếng Việt cho một kế toán viên cần sử dụng SAP T-code F-44 để bù trừ tài khoản của nhà cung cấp. Kịch bản nên bao gồm một nhà cung cấp cụ thể, một hóa đơn và một khoản thanh toán. Định dạng đầu ra dưới dạng một đoạn văn đơn giản.";
+            generateContent(prompt, 'loader-f44', 'scenario-f44');
+        });
+        
+        document.getElementById('generate-f03').addEventListener('click', () => {
+            const prompt = "Hãy tạo một kịch bản kinh doanh ngắn gọn, thực tế bằng tiếng Việt cho một kế toán viên cần sử dụng SAP T-code F-03 để bù trừ một tài khoản trung gian (clearing account), ví dụ như tài khoản 'tiền đang chuyển'. Kịch bản nên giải thích tại sao cần phải bù trừ thủ công. Định dạng đầu ra dưới dạng một đoạn văn đơn giản.";
+            generateContent(prompt, 'loader-f03', 'scenario-f03');
+        });
+    </script>
 </body>
 </html>
